@@ -174,6 +174,7 @@
             // 
             // openFileDialog
             // 
+            openFileDialog.CheckFileExists = false;
             openFileDialog.FileName = "openFileDialog";
             // 
             // Form1

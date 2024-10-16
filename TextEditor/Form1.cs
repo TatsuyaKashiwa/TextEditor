@@ -7,30 +7,43 @@ namespace TextEditor
             InitializeComponent();
         }
 
-        static string filepath = "";
+        static string loadedfilepath = "";
+        static string savingfilepath = "";
+        static string defaultText="";
 
-        void getFilepath()
+        string GetFilepath()
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                filepath = openFileDialog.FileName;
+                return openFileDialog.FileName;
+            }
+            else
+            {
+                return "";
             }
         }
 
         private void load_Click(object sender, EventArgs e)
         {
-            getFilepath();
-            var lines = File.ReadLines(filepath);
+            loadedfilepath = GetFilepath();
+            var lines = File.ReadLines(loadedfilepath);
             foreach (var line in lines)
             {
                 richTextBox.Text += line + Environment.NewLine;
+                defaultText += line + Environment.NewLine;
             }
         }
 
         private void save_Click(object sender, EventArgs e)
         {
-            getFilepath();
-            File.WriteAllText(filepath, richTextBox.Text);
+            savingfilepath = GetFilepath();
+            if (!File.Exists(savingfilepath)) 
+            {
+                using (File.Create(savingfilepath)) ;
+            }
+            File.WriteAllText(loadedfilepath, richTextBox.Text);
+            File.Copy(loadedfilepath, savingfilepath, overwrite:true);
+            File.WriteAllText(loadedfilepath, defaultText);
         }
     }
 }
