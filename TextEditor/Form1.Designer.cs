@@ -39,6 +39,7 @@
             utf16be = new RadioButton();
             utf32 = new RadioButton();
             richTextBox = new RichTextBox();
+            openFileDialog = new OpenFileDialog();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -65,6 +66,7 @@
             load.TabIndex = 0;
             load.Text = "load";
             load.UseVisualStyleBackColor = true;
+            load.Click += load_Click;
             // 
             // save
             // 
@@ -169,6 +171,10 @@
             richTextBox.TabIndex = 2;
             richTextBox.Text = "";
             // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -199,5 +205,6 @@
         private RadioButton utf16be;
         private RadioButton utf32;
         private RichTextBox richTextBox;
+        private OpenFileDialog openFileDialog;
     }
 }
