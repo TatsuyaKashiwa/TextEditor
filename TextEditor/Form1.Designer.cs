@@ -77,6 +77,7 @@
             save.TabIndex = 1;
             save.Text = "save";
             save.UseVisualStyleBackColor = true;
+            save.Click += save_Click;
             // 
             // changeTextColor
             // 

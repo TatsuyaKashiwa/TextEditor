@@ -7,13 +7,13 @@ namespace TextEditor
             InitializeComponent();
         }
 
-        static string filepath ="";
+        static string filepath = "";
 
-        void getFilepath() 
+        void getFilepath()
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                filepath = openFileDialog.FileName; 
+                filepath = openFileDialog.FileName;
             }
         }
 
@@ -21,10 +21,16 @@ namespace TextEditor
         {
             getFilepath();
             var lines = File.ReadLines(filepath);
-            foreach (var line in lines) 
+            foreach (var line in lines)
             {
                 richTextBox.Text += line + Environment.NewLine;
             }
+        }
+
+        private void save_Click(object sender, EventArgs e)
+        {
+            getFilepath();
+            File.WriteAllText(filepath, richTextBox.Text);
         }
     }
 }
