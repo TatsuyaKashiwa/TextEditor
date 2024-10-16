@@ -97,6 +97,7 @@
             // 
             // flowLayoutPanel2
             // 
+            flowLayoutPanel2.BackgroundImageLayout = ImageLayout.Center;
             flowLayoutPanel2.Controls.Add(utf8);
             flowLayoutPanel2.Controls.Add(utf16le);
             flowLayoutPanel2.Controls.Add(utf16be);
