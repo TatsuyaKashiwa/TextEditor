@@ -40,6 +40,8 @@
             utf32 = new RadioButton();
             richTextBox = new RichTextBox();
             openFileDialog = new OpenFileDialog();
+            colorDialogText = new ColorDialog();
+            colorDialogTag = new ColorDialog();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -88,6 +90,7 @@
             changeTextColor.TabIndex = 2;
             changeTextColor.Text = "文字色変更";
             changeTextColor.UseVisualStyleBackColor = true;
+            changeTextColor.Click += changeTextColor_Click;
             // 
             // changeTagColor
             // 
@@ -114,12 +117,14 @@
             // utf8
             // 
             utf8.AutoSize = true;
+            utf8.Checked = true;
             utf8.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
             utf8.Location = new Point(3, 10);
             utf8.Name = "utf8";
             utf8.Padding = new Padding(0, 0, 131, 0);
             utf8.Size = new Size(210, 29);
             utf8.TabIndex = 0;
+            utf8.TabStop = true;
             utf8.Text = "UTF-8";
             utf8.UseVisualStyleBackColor = true;
             utf8.CheckedChanged += utf8_CheckedChanged;
@@ -207,5 +212,7 @@
         private RadioButton utf32;
         private RichTextBox richTextBox;
         private OpenFileDialog openFileDialog;
+        private ColorDialog colorDialogText;
+        private ColorDialog colorDialogTag;
     }
 }

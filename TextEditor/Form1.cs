@@ -42,7 +42,7 @@ namespace TextEditor
 
         private void save_Click(object sender, EventArgs e)
         {
-            richTextBox.Text = Encodes.ChangeEncode(encodeLoad,encodeSave, richTextBox.Text);
+            richTextBox.Text = Encodes.ChangeEncode(encodeLoad, encodeSave, richTextBox.Text);
             savingfilepath = GetFilepath();
             if (!File.Exists(savingfilepath))
             {
@@ -60,5 +60,13 @@ namespace TextEditor
         private void utf16be_CheckedChanged(object sender, EventArgs e) => encodeNum = 2;
 
         private void utf32_CheckedChanged(object sender, EventArgs e) => encodeNum = 3;
+
+        private void changeTextColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialogText.ShowDialog() == DialogResult.OK) 
+            {
+                richTextBox.ForeColor = colorDialogText.Color;
+            }
+        }
     }
 }
