@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TextEditor
 {
@@ -15,6 +16,18 @@ namespace TextEditor
         static int encodeNum = 0;
         static Encoding encodeLoad = Encodes.GetEncode(0);
         static Encoding encodeSave = Encodes.GetEncode(0);
+        bool isXML(string path) => Regex.IsMatch(path, ".xml$");
+
+        void ColoringTag()
+        {
+            var tags = Regex.Matches(richTextBox.Text, @"<([^<>]+)>");
+            foreach (Match tag in tags)
+            {
+                var index = tag.Groups[1].Index;
+                var tagLength = tag.Groups[1].Length;
+                richTextBox.Select(index, tagLength);
+            }
+        }
 
         string GetFilepath()
         {
@@ -63,9 +76,20 @@ namespace TextEditor
 
         private void changeTextColor_Click(object sender, EventArgs e)
         {
-            if (colorDialogText.ShowDialog() == DialogResult.OK) 
+            if (colorDialogText.ShowDialog() == DialogResult.OK)
             {
                 richTextBox.ForeColor = colorDialogText.Color;
+            }
+        }
+
+        private void changeTagColor_Click(object sender, EventArgs e)
+        {
+            if (isXML(loadedfilepath)) 
+            {
+                if (colorDialogTag.ShowDialog() == DialogResult.OK) 
+                {
+                    richTextBox.SelectionColor = colorDialogTag.Color;
+                }
             }
         }
     }

@@ -100,6 +100,7 @@
             changeTagColor.TabIndex = 3;
             changeTagColor.Text = "タグ色変更(XML)";
             changeTagColor.UseVisualStyleBackColor = true;
+            changeTagColor.Click += changeTagColor_Click;
             // 
             // flowLayoutPanel2
             // 
