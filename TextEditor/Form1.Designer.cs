@@ -113,9 +113,7 @@
             // 
             // utf8
             // 
-            utf8.AutoCheck = false;
             utf8.AutoSize = true;
-            utf8.Checked = true;
             utf8.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 128);
             utf8.Location = new Point(3, 10);
             utf8.Name = "utf8";
@@ -124,6 +122,7 @@
             utf8.TabIndex = 0;
             utf8.Text = "UTF-8";
             utf8.UseVisualStyleBackColor = true;
+            utf8.CheckedChanged += utf8_CheckedChanged;
             // 
             // utf16le
             // 
@@ -134,9 +133,9 @@
             utf16le.Padding = new Padding(0, 0, 80, 0);
             utf16le.Size = new Size(200, 29);
             utf16le.TabIndex = 1;
-            utf16le.TabStop = true;
             utf16le.Text = "UTF-16(LE)";
             utf16le.UseVisualStyleBackColor = true;
+            utf16le.CheckedChanged += utf16le_CheckedChanged;
             // 
             // utf16be
             // 
@@ -147,9 +146,9 @@
             utf16be.Padding = new Padding(0, 0, 88, 0);
             utf16be.Size = new Size(210, 29);
             utf16be.TabIndex = 2;
-            utf16be.TabStop = true;
             utf16be.Text = "UTF-16(BE)";
             utf16be.UseVisualStyleBackColor = true;
+            utf16be.CheckedChanged += utf16be_CheckedChanged;
             // 
             // utf32
             // 
@@ -159,9 +158,9 @@
             utf32.Name = "utf32";
             utf32.Size = new Size(89, 29);
             utf32.TabIndex = 3;
-            utf32.TabStop = true;
             utf32.Text = "UTF-32";
             utf32.UseVisualStyleBackColor = true;
+            utf32.CheckedChanged += utf32_CheckedChanged;
             // 
             // richTextBox
             // 
