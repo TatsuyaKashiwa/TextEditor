@@ -176,6 +176,7 @@
             richTextBox.Size = new Size(800, 622);
             richTextBox.TabIndex = 2;
             richTextBox.Text = "";
+            richTextBox.TextChanged += textChanged;
             // 
             // openFileDialog
             // 

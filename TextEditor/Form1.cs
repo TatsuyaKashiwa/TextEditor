@@ -16,6 +16,7 @@ namespace TextEditor
         static int encodeNum = 0;
         static Encoding encodeLoad = Encodes.GetEncode(0);
         static Encoding encodeSave = Encodes.GetEncode(0);
+        static Color tagColor = Color.Blue;
         bool isXML(string path) => Regex.IsMatch(path, ".xml$");
 
         void ColoringTag()
@@ -26,6 +27,7 @@ namespace TextEditor
                 var index = tag.Groups[1].Index;
                 var tagLength = tag.Groups[1].Length;
                 richTextBox.Select(index, tagLength);
+                richTextBox.SelectionColor = tagColor;
             }
         }
 
@@ -50,6 +52,11 @@ namespace TextEditor
             {
                 richTextBox.Text += line + Environment.NewLine;
                 defaultText += line + Environment.NewLine;
+            }
+            if (isXML(loadedfilepath)) 
+            {
+                ColoringTag();
+                richTextBox.SelectionColor = tagColor;
             }
         }
 
@@ -79,17 +86,35 @@ namespace TextEditor
             if (colorDialogText.ShowDialog() == DialogResult.OK)
             {
                 richTextBox.ForeColor = colorDialogText.Color;
+                ColoringTag();
             }
         }
 
         private void changeTagColor_Click(object sender, EventArgs e)
         {
-            if (isXML(loadedfilepath)) 
+            if (isXML(loadedfilepath) && (colorDialogTag.ShowDialog() == DialogResult.OK)) 
             {
-                if (colorDialogTag.ShowDialog() == DialogResult.OK) 
+                tagColor = colorDialogTag.Color;
+                ColoringTag();
+            }
+        }
+
+        private void textChanged(object sender, EventArgs e)
+        {
+            if (isXML(loadedfilepath))
+            {
+                int currentPosition = richTextBox.SelectionStart;
+                string alltext = richTextBox.Text;
+                var tags = Regex.Matches(richTextBox.Text, @"<([^<>]+)>");
+                foreach (Match tag in tags)
                 {
-                    richTextBox.SelectionColor = colorDialogTag.Color;
+                    var index = tag.Groups[1].Index;
+                    var tagLength = tag.Groups[1].Length;
+                    richTextBox.Select(index, tagLength);
+                    richTextBox.SelectionColor = tagColor;
                 }
+                richTextBox.SelectionStart = currentPosition;
+                richTextBox.SelectionLength = 0;
             }
         }
     }
