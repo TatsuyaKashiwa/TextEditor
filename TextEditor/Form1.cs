@@ -70,6 +70,7 @@ namespace TextEditor
 
         private void save_Click(object sender, EventArgs e)
         {
+            encodeSave = Encodes.GetEncode(encodeNum);
             richTextBox.Text = Encodes.ChangeEncode(encodeLoad, encodeSave, richTextBox.Text);
             savingfilepath = GetFilepath();
             if (!File.Exists(savingfilepath) && savingfilepath != "")
@@ -78,9 +79,11 @@ namespace TextEditor
             }
             try 
             {
-                File.WriteAllText(loadedfilepath, richTextBox.Text, Encodes.GetEncode(encodeNum));
-                File.Copy(loadedfilepath, savingfilepath, overwrite: true);
-                File.WriteAllText(loadedfilepath, defaultText, Encodes.GetEncode(encodeNum));
+                File.WriteAllText(savingfilepath, richTextBox.Text, encodeSave);
+                if (loadedfilepath != "")
+                {
+                    File.WriteAllText(loadedfilepath, defaultText, encodeLoad);
+                }
             }
             catch (Exception ex)
             {
