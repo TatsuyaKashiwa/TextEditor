@@ -12,7 +12,6 @@ namespace TextEditor
 
         static string loadedfilepath = "";
         static string savingfilepath = "";
-        static string defaultText = "";
         static int encodeNum = 0;
         static Encoding encodeLoad = Encodes.GetEncode(0);
         static Encoding encodeSave = Encodes.GetEncode(0);
@@ -54,7 +53,6 @@ namespace TextEditor
                 foreach (var line in lines)
                 {
                     richTextBox.Text += line + Environment.NewLine;
-                    defaultText += line + Environment.NewLine;
                 }
                 if (isXML(loadedfilepath)) 
                 {
@@ -80,10 +78,6 @@ namespace TextEditor
             try 
             {
                 File.WriteAllText(savingfilepath, richTextBox.Text, encodeSave);
-                if (loadedfilepath != "")
-                {
-                    File.WriteAllText(loadedfilepath, defaultText, encodeLoad);
-                }
             }
             catch (Exception ex)
             {
