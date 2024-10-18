@@ -17,6 +17,7 @@ namespace TextEditor
         static Encoding encodeLoad = Encodes.GetEncode(0);
         static Encoding encodeSave = Encodes.GetEncode(0);
         static Color tagColor = Color.Blue;
+       
         bool isXML(string path) => Regex.IsMatch(path, ".xml$");
 
         void ColoringTag()
@@ -47,16 +48,23 @@ namespace TextEditor
         {
             loadedfilepath = GetFilepath();
             encodeLoad = Encodes.GetEncode(encodeNum);
-            var lines = File.ReadLines(loadedfilepath, encodeLoad);
-            foreach (var line in lines)
+            try
             {
-                richTextBox.Text += line + Environment.NewLine;
-                defaultText += line + Environment.NewLine;
+                var lines = File.ReadLines(loadedfilepath, encodeLoad);
+                foreach (var line in lines)
+                {
+                    richTextBox.Text += line + Environment.NewLine;
+                    defaultText += line + Environment.NewLine;
+                }
+                if (isXML(loadedfilepath)) 
+                {
+                    ColoringTag();
+                    richTextBox.SelectionColor = tagColor;
+                }
             }
-            if (isXML(loadedfilepath)) 
+            catch (Exception ex)
             {
-                ColoringTag();
-                richTextBox.SelectionColor = tagColor;
+                ErrorMessage.ShowErrorMessage(ex);
             }
         }
 
