@@ -72,13 +72,20 @@ namespace TextEditor
         {
             richTextBox.Text = Encodes.ChangeEncode(encodeLoad, encodeSave, richTextBox.Text);
             savingfilepath = GetFilepath();
-            if (!File.Exists(savingfilepath))
+            if (!File.Exists(savingfilepath) && savingfilepath != "")
             {
                 using (File.Create(savingfilepath)) ;
             }
-            File.WriteAllText(loadedfilepath, richTextBox.Text, Encodes.GetEncode(encodeNum));
-            File.Copy(loadedfilepath, savingfilepath, overwrite: true);
-            File.WriteAllText(loadedfilepath, defaultText, Encodes.GetEncode(encodeNum));
+            try 
+            {
+                File.WriteAllText(loadedfilepath, richTextBox.Text, Encodes.GetEncode(encodeNum));
+                File.Copy(loadedfilepath, savingfilepath, overwrite: true);
+                File.WriteAllText(loadedfilepath, defaultText, Encodes.GetEncode(encodeNum));
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage.ShowErrorMessage(ex);
+            }
         }
 
         private void utf8_CheckedChanged(object sender, EventArgs e) => encodeNum = 0;
