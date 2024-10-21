@@ -139,7 +139,6 @@ namespace TextEditor
             if (isXML(loadedfilepath))
             {
                 int currentPosition = richTextBox.SelectionStart;
-                string alltext = richTextBox.Text;
                 ColoringTag();
                 richTextBox.SelectionStart = currentPosition;
                 richTextBox.SelectionLength = 0;
