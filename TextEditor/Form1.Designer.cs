@@ -183,6 +183,7 @@
             // 
             openFileDialog.CheckFileExists = false;
             openFileDialog.FileName = "openFileDialog";
+            openFileDialog.Filter = "テキストドキュメント(*.txt)|*.txt|XMLファイル(*.xml)|*.xml|全てのファイル(*.*)|*.*";
             // 
             // saveFileDialog
             // 
