@@ -38,25 +38,16 @@ namespace TextEditor
             }
         }
 
-        //入力・出力共にファイルパスを得ることは共通であるのでメソッドとして共通化すべきである
-        //入出力先のパスは別になり得るため、得られたファイルパスを返り値(string型)として返す必要がある
-        //パスを得るためのif文だけでなく、else文としてファイル選択されなかった際の返り値を設定した形とした
-        string GetFilepath()
+        //ファイルを選択したエンコードで取り込み、XMLファイルであれば色を付けたい
+        //すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため
+        //テキストの読み込みとタグの色付けは一連の動作としたいため
+        //一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
+        private void load_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                return openFileDialog.FileName;
+                loadedfilepath = openFileDialog.FileName;
             }
-            else
-            {
-                return "";
-            }
-        }
-
-        
-        private void load_Click(object sender, EventArgs e)
-        {
-            loadedfilepath = GetFilepath();
             encodeLoad = Encodes.GetEncode(encodeNum);
             try
             {
@@ -65,7 +56,7 @@ namespace TextEditor
                 {
                     richTextBox.Text += line + Environment.NewLine;
                 }
-                if (isXML(loadedfilepath)) 
+                if (isXML(loadedfilepath))
                 {
                     ColoringTag();
                     richTextBox.SelectionColor = tagColor;
@@ -77,16 +68,22 @@ namespace TextEditor
             }
         }
 
+        //ファイルを指定したエンコードで保存、ファイルを新たに作り出すことも行いたい
+        //ファイルのエンコードは保存先、ファイルの有無はテキストボックスからデータをファイルに書き出す時に行う必要があるため
+        //Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
         private void save_Click(object sender, EventArgs e)
         {
             encodeSave = Encodes.GetEncode(encodeNum);
             richTextBox.Text = Encodes.ChangeEncode(encodeLoad, encodeSave, richTextBox.Text);
-            savingfilepath = GetFilepath();
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                savingfilepath = saveFileDialog.FileName;
+            }
             if (!File.Exists(savingfilepath) && savingfilepath != "")
             {
                 using (File.Create(savingfilepath)) ;
             }
-            try 
+            try
             {
                 File.WriteAllText(savingfilepath, richTextBox.Text, encodeSave);
             }
@@ -124,7 +121,7 @@ namespace TextEditor
         //要素の色を決定した後タグ色を変更させるメソッドを作用させた
         private void changeTagColor_Click(object sender, EventArgs e)
         {
-            if (isXML(loadedfilepath) && (colorDialogTag.ShowDialog() == DialogResult.OK)) 
+            if (isXML(loadedfilepath) && (colorDialogTag.ShowDialog() == DialogResult.OK))
             {
                 tagColor = colorDialogTag.Color;
                 ColoringTag();
@@ -144,5 +141,6 @@ namespace TextEditor
                 richTextBox.SelectionLength = 0;
             }
         }
+
     }
 }

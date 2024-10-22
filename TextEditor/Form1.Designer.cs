@@ -42,6 +42,7 @@
             openFileDialog = new OpenFileDialog();
             colorDialogText = new ColorDialog();
             colorDialogTag = new ColorDialog();
+            saveFileDialog = new SaveFileDialog();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -216,5 +217,6 @@
         private OpenFileDialog openFileDialog;
         private ColorDialog colorDialogText;
         private ColorDialog colorDialogTag;
+        private SaveFileDialog saveFileDialog;
     }
 }
