@@ -184,6 +184,10 @@
             openFileDialog.CheckFileExists = false;
             openFileDialog.FileName = "openFileDialog";
             // 
+            // saveFileDialog
+            // 
+            saveFileDialog.Filter = "テキストドキュメント(*.txt)|*.txt|XMLファイル(*.xml)|*.xml|全てのファイル(*.*)|*.*";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
