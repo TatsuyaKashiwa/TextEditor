@@ -10,23 +10,23 @@ namespace TextEditor
             InitializeComponent();
         }
 
-        static string loadedfilepath = "";
-        static string savingfilepath = "";
-        static int encodeNum = 0;
-        static Encoding encodeLoad = Encodes.GetEncode(0);
-        static Encoding encodeSave = Encodes.GetEncode(0);
-        static Color tagColor = Color.Blue;
+        private string _loadedFilePath = "";
+        private string _savingFilePath = "";
+        private int _encodeNum = 0;
+        private Encoding _encodeLoad = Encodes.GetEncode(0);
+        private Encoding _encodeSave = Encodes.GetEncode(0);
+        private Color _tagColor = Color.Blue;
 
         //xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
         //判定結果を boolとしたほうが、条件式にそのまま組み込めるので
         //引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
-        bool isXML(string path) => Regex.IsMatch(path, ".xml$");
+        private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
         //タグの要素のみを別の色へ変更する必要がある
         //タグに合致する表現を見つけ出して、要素だけを色付けする必要があるため
         //タグの条件に合致する表現を配列に格納し
         //要素部分だけをタグ色で指定した色へ変更させた。
-        void ColoringTag()
+        private void ColoringTag()
         {
             var tags = Regex.Matches(richTextBox.Text, @"<([^<>]+)>");
             foreach (Match tag in tags)
@@ -34,7 +34,7 @@ namespace TextEditor
                 var index = tag.Groups[1].Index;
                 var tagLength = tag.Groups[1].Length;
                 richTextBox.Select(index, tagLength);
-                richTextBox.SelectionColor = tagColor;
+                richTextBox.SelectionColor = _tagColor;
             }
         }
 
@@ -46,20 +46,20 @@ namespace TextEditor
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                loadedfilepath = openFileDialog.FileName;
+                _loadedFilePath = openFileDialog.FileName;
             }
-            encodeLoad = Encodes.GetEncode(encodeNum);
+            _encodeLoad = Encodes.GetEncode(_encodeNum);
             try
             {
-                var lines = File.ReadLines(loadedfilepath, encodeLoad);
+                var lines = File.ReadLines(_loadedFilePath, _encodeLoad);
                 foreach (var line in lines)
                 {
                     richTextBox.Text += line + Environment.NewLine;
                 }
-                if (isXML(loadedfilepath))
+                if (IsXML(_loadedFilePath))
                 {
                     ColoringTag();
-                    richTextBox.SelectionColor = tagColor;
+                    richTextBox.SelectionColor = _tagColor;
                 }
             }
             catch (Exception ex)
@@ -73,20 +73,20 @@ namespace TextEditor
         //Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
         private void save_Click(object sender, EventArgs e)
         {
-            encodeSave = Encodes.GetEncode(encodeNum);
-            richTextBox.Text = Encodes.ChangeEncode(encodeLoad, encodeSave, richTextBox.Text);
+            _encodeSave = Encodes.GetEncode(_encodeNum);
+            richTextBox.Text = Encodes.ChangeEncode(_encodeLoad, _encodeSave, richTextBox.Text);
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                savingfilepath = saveFileDialog.FileName;
+                _savingFilePath = saveFileDialog.FileName;
             }
-            if (!File.Exists(savingfilepath) && savingfilepath != "")
+            if (!File.Exists(_savingFilePath) && _savingFilePath != "")
             {
-                FileStream fileStream = File.Open(savingfilepath, FileMode.Create, FileAccess.ReadWrite);
+                FileStream fileStream = File.Open(_savingFilePath, FileMode.Create, FileAccess.ReadWrite);
                 fileStream.Close();
             }
             try
             {
-                File.WriteAllText(savingfilepath, richTextBox.Text, encodeSave);
+                File.WriteAllText(_savingFilePath, richTextBox.Text, _encodeSave);
             }
             catch (Exception ex)
             {
@@ -97,13 +97,13 @@ namespace TextEditor
         //ラジオボタンの選択で読み込み/保存のエンコードを変えられるようにしたい
         //ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
         //各ボタンのエンコードに対応するint型の値を返すようにした
-        private void utf8_CheckedChanged(object sender, EventArgs e) => encodeNum = 0;
+        private void utf8_CheckedChanged(object sender, EventArgs e) => _encodeNum = 0;
 
-        private void utf16le_CheckedChanged(object sender, EventArgs e) => encodeNum = 1;
+        private void utf16le_CheckedChanged(object sender, EventArgs e) => _encodeNum = 1;
 
-        private void utf16be_CheckedChanged(object sender, EventArgs e) => encodeNum = 2;
+        private void utf16be_CheckedChanged(object sender, EventArgs e) => _encodeNum = 2;
 
-        private void utf32_CheckedChanged(object sender, EventArgs e) => encodeNum = 3;
+        private void utf32_CheckedChanged(object sender, EventArgs e) => _encodeNum = 3;
 
         //タグ要素の色を変更せずにテキストの色を変更したい
         //なぜなら、タグ要素の色付けが一時的なものとなってしまうため
@@ -122,9 +122,9 @@ namespace TextEditor
         //要素の色を決定した後タグ色を変更させるメソッドを作用させた
         private void changeTagColor_Click(object sender, EventArgs e)
         {
-            if (isXML(loadedfilepath) && (colorDialogTag.ShowDialog() == DialogResult.OK))
+            if (IsXML(_loadedFilePath) && (colorDialogTag.ShowDialog() == DialogResult.OK))
             {
-                tagColor = colorDialogTag.Color;
+                _tagColor = colorDialogTag.Color;
                 ColoringTag();
             }
         }
@@ -134,7 +134,7 @@ namespace TextEditor
         //通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
         private void textChanged(object sender, EventArgs e)
         {
-            if (isXML(loadedfilepath))
+            if (IsXML(_loadedFilePath))
             {
                 int currentPosition = richTextBox.SelectionStart;
                 ColoringTag();
