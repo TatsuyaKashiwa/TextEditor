@@ -81,7 +81,8 @@ namespace TextEditor
             }
             if (!File.Exists(savingfilepath) && savingfilepath != "")
             {
-                using (File.Create(savingfilepath)) ;
+                FileStream fileStream = File.Open(savingfilepath, FileMode.Create, FileAccess.ReadWrite);
+                fileStream.Close();
             }
             try
             {
