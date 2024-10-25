@@ -15,12 +15,12 @@ namespace TextEditor
         //ただし、選択するエンコードの種類はアプリケーション利用中に追加することはないため
         //(通常の)配列としてアプリケーションで用いるエンコードを格納した
         //(下記メソッドを介して取り扱われるためprivateとした)
-       private static Encoding[] encodings = {Encoding.UTF8,Encoding.Unicode,Encoding.BigEndianUnicode,Encoding.UTF32 };
+       private static Encoding[] _encodings = {Encoding.UTF8,Encoding.Unicode,Encoding.BigEndianUnicode,Encoding.UTF32 };
         
         //上記の配列からエンコードを取り出す仕組みが必要となる
         //外部のコントロールの選択と上記の配列を対応させる必要があるため
         //引数にコントロールの選択に対応する値を取るメソッドとして定義した
-        internal static Encoding GetEncode(int i) => encodings[i];
+        internal static Encoding GetEncode(int i) => _encodings[i];
 
         //エンコードを変化させただけでは文字化けとなり、ファイルの内容を保持したエンコード変換ができない。
         //内容を保持したままエンコードを変換するには一旦バイト配列に変換する必要がある
