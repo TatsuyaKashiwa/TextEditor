@@ -7,7 +7,7 @@ namespace TextEditor
     {
         public Form1()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private string _loadedFilePath = "";
@@ -28,13 +28,13 @@ namespace TextEditor
         //要素部分だけをタグ色で指定した色へ変更させた。
         private void ColoringTag()
         {
-            var tags = Regex.Matches(richTextBox.Text, @"<([^<>]+)>");
+            var tags = Regex.Matches(this.richTextBox.Text, @"<([^<>]+)>");
             foreach (Match tag in tags)
             {
                 var index = tag.Groups[1].Index;
                 var tagLength = tag.Groups[1].Length;
-                richTextBox.Select(index, tagLength);
-                richTextBox.SelectionColor = _tagColor;
+                this.richTextBox.Select(index, tagLength);
+                this.richTextBox.SelectionColor = this._tagColor;
             }
         }
 
@@ -44,22 +44,22 @@ namespace TextEditor
         //一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
         private void load_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (this.openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _loadedFilePath = openFileDialog.FileName;
+                this._loadedFilePath = this.openFileDialog.FileName;
             }
-            _encodeLoad = Encodes.GetEncode(_encodeNum);
+            this._encodeLoad = Encodes.GetEncode(this._encodeNum);
             try
             {
-                var lines = File.ReadLines(_loadedFilePath, _encodeLoad);
+                var lines = File.ReadLines(this._loadedFilePath, this._encodeLoad);
                 foreach (var line in lines)
                 {
-                    richTextBox.Text += line + Environment.NewLine;
+                    this.richTextBox.Text += line + Environment.NewLine;
                 }
-                if (IsXML(_loadedFilePath))
+                if (this.IsXML(this._loadedFilePath))
                 {
-                    ColoringTag();
-                    richTextBox.SelectionColor = _tagColor;
+                    this.ColoringTag();
+                    this.richTextBox.SelectionColor = this._tagColor;
                 }
             }
             catch (Exception ex)
@@ -73,20 +73,20 @@ namespace TextEditor
         //Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
         private void save_Click(object sender, EventArgs e)
         {
-            _encodeSave = Encodes.GetEncode(_encodeNum);
-            richTextBox.Text = Encodes.ChangeEncode(_encodeLoad, _encodeSave, richTextBox.Text);
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            this._encodeSave = Encodes.GetEncode(this._encodeNum);
+            this.richTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.richTextBox.Text);
+            if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _savingFilePath = saveFileDialog.FileName;
+                this._savingFilePath = this.saveFileDialog.FileName;
             }
-            if (!File.Exists(_savingFilePath) && _savingFilePath != "")
+            if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
             {
-                FileStream fileStream = File.Open(_savingFilePath, FileMode.Create, FileAccess.ReadWrite);
+                FileStream fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite);
                 fileStream.Close();
             }
             try
             {
-                File.WriteAllText(_savingFilePath, richTextBox.Text, _encodeSave);
+                File.WriteAllText(this._savingFilePath, this.richTextBox.Text, this._encodeSave);
             }
             catch (Exception ex)
             {
@@ -110,10 +110,10 @@ namespace TextEditor
         //テキスト色変更後にタグの色を付けなおした
         private void changeTextColor_Click(object sender, EventArgs e)
         {
-            if (colorDialogText.ShowDialog() == DialogResult.OK)
+            if (this.colorDialogText.ShowDialog() == DialogResult.OK)
             {
-                richTextBox.ForeColor = colorDialogText.Color;
-                ColoringTag();
+                this.richTextBox.ForeColor = this.colorDialogText.Color;
+                this.ColoringTag();
             }
         }
 
@@ -122,10 +122,10 @@ namespace TextEditor
         //要素の色を決定した後タグ色を変更させるメソッドを作用させた
         private void changeTagColor_Click(object sender, EventArgs e)
         {
-            if (IsXML(_loadedFilePath) && (colorDialogTag.ShowDialog() == DialogResult.OK))
+            if (this.IsXML(this._loadedFilePath) && (this.colorDialogTag.ShowDialog() == DialogResult.OK))
             {
-                _tagColor = colorDialogTag.Color;
-                ColoringTag();
+                this._tagColor = this.colorDialogTag.Color;
+                this.ColoringTag();
             }
         }
 
@@ -134,12 +134,12 @@ namespace TextEditor
         //通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
         private void textChanged(object sender, EventArgs e)
         {
-            if (IsXML(_loadedFilePath))
+            if (this.IsXML(this._loadedFilePath))
             {
-                int currentPosition = richTextBox.SelectionStart;
-                ColoringTag();
-                richTextBox.SelectionStart = currentPosition;
-                richTextBox.SelectionLength = 0;
+                int currentPosition = this.richTextBox.SelectionStart;
+                this.ColoringTag();
+                this.richTextBox.SelectionStart = currentPosition;
+                this.richTextBox.SelectionLength = 0;
             }
         }
 
