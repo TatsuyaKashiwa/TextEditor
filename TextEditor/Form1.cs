@@ -97,13 +97,13 @@ namespace TextEditor
         //ラジオボタンの選択で読み込み/保存のエンコードを変えられるようにしたい
         //ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
         //各ボタンのエンコードに対応するint型の値を返すようにした
-        private void utf8_CheckedChanged(object sender, EventArgs e) => _encodeNum = 0;
+        private void utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
 
-        private void utf16le_CheckedChanged(object sender, EventArgs e) => _encodeNum = 1;
+        private void utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
 
-        private void utf16be_CheckedChanged(object sender, EventArgs e) => _encodeNum = 2;
+        private void utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 2;
 
-        private void utf32_CheckedChanged(object sender, EventArgs e) => _encodeNum = 3;
+        private void utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
 
         //タグ要素の色を変更せずにテキストの色を変更したい
         //なぜなら、タグ要素の色付けが一時的なものとなってしまうため
