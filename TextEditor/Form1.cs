@@ -17,15 +17,27 @@ namespace TextEditor
         private Encoding _encodeSave = Encodes.GetEncode(0);
         private Color _tagColor = Color.Blue;
 
-        //xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
-        //判定結果を boolとしたほうが、条件式にそのまま組み込めるので
-        //引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
+        /// <summary>
+        /// XMLファイルであるかを判定するメソッド
+        /// </summary>
+        /// <param name="path">判定対象のファイルパス</param>
+        /// <returns>XMLファイルであればtrueを返す</returns>
+        /// <remarks>
+        ///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
+        ///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
+        ///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
+        /// </remarks>
         private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
-        //タグの要素のみを別の色へ変更する必要がある
-        //タグに合致する表現を見つけ出して、要素だけを色付けする必要があるため
-        //タグの条件に合致する表現を配列に格納し
-        //要素部分だけをタグ色で指定した色へ変更させた。
+        /// <summary>
+        /// (XML)タグ要素の色を変更
+        /// </summary>
+        ///<remarks>
+        ///タグの要素のみを別の色へ変更する必要がある
+        ///タグに合致する表現を見つけ出して、要素だけを色付けする必要があるため
+        ///タグの条件に合致する表現を配列に格納し
+        ///要素部分だけをタグ色で指定した色へ変更させた。
+        ///</remarks>
         private void ColoringTag()
         {
             var tags = Regex.Matches(this.richTextBox.Text, @"<([^<>]+)>");
@@ -38,10 +50,18 @@ namespace TextEditor
             }
         }
 
-        //ファイルを選択したエンコードで取り込み、XMLファイルであれば色を付けたい
-        //すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため
-        //テキストの読み込みとタグの色付けは一連の動作としたいため
-        //一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
+        /// <summary>
+        /// ファイル読み込み(loadボタン押下時の動作)に対応するメソッド
+        /// </summary>
+        /// <param name="ex">catchした例外</param>
+        /// <remarks>
+        /// ファイルを選択したエンコードで取り込み、XMLファイルであれば色を付けたい
+        ///すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため
+        ///テキストの読み込みとタグの色付けは一連の動作としたいため
+        ///一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
+        ///</remarks>
+        ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
+        ///<exception cref="System.IO.FileNotFoundException">存在しないファイル名を入力した場合</exception>
         private void load_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog.ShowDialog() == DialogResult.OK)
@@ -68,9 +88,16 @@ namespace TextEditor
             }
         }
 
-        //ファイルを指定したエンコードで保存、ファイルを新たに作り出すことも行いたい
-        //ファイルのエンコードは保存先、ファイルの有無はテキストボックスからデータをファイルに書き出す時に行う必要があるため
-        //Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
+        /// <summary>
+        /// ファイル保存(saveボタン押下)に対応するメソッド
+        /// </summary>
+        /// <param name="ex">catchした例外</param>
+        /// <remarks>
+        /// ファイルを指定したエンコードで保存、ファイルを新たに作り出すことも行いたい
+        ///ファイルのエンコードは保存先、ファイルの有無はテキストボックスからデータをファイルに書き出す時に行う必要があるため
+        ///Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
+        ///</remarks>
+        ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
         private void save_Click(object sender, EventArgs e)
         {
             this._encodeSave = Encodes.GetEncode(this._encodeNum);
@@ -94,9 +121,14 @@ namespace TextEditor
             }
         }
 
-        //ラジオボタンの選択で読み込み/保存のエンコードを変えられるようにしたい
-        //ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
-        //各ボタンのエンコードに対応するint型の値を返すようにした
+        /// <summary>
+        /// ラジオボタンに対応するエンコード（に対応するインデックス）を選択するメソッド
+        /// </summary>
+        /// <remarks>
+        /// ラジオボタンの選択で読み込み/保存のエンコードを変えられるようにしたい
+        ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
+        ///各ボタンのエンコードに対応するint型の値を返すようにした
+        ///</remarks>
         private void utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
 
         private void utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
@@ -105,9 +137,14 @@ namespace TextEditor
 
         private void utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
 
-        //タグ要素の色を変更せずにテキストの色を変更したい
-        //なぜなら、タグ要素の色付けが一時的なものとなってしまうため
-        //テキスト色変更後にタグの色を付けなおした
+        /// <summary>
+        /// テキスト色変更のメソッド
+        /// </summary>
+        /// <remarks>
+        /// タグ要素の色を変更せずにテキストの色を変更したい
+        ///なぜなら、タグ要素の色付けが一時的なものとなってしまうため
+        ///テキスト色変更後にタグの色を付けなおした
+        ///</remarks>
         private void changeTextColor_Click(object sender, EventArgs e)
         {
             if (this.colorDialogText.ShowDialog() == DialogResult.OK)
@@ -117,9 +154,14 @@ namespace TextEditor
             }
         }
 
-        //タグ要素の色を変更したい
-        //ただプロパティを変更するだけでは色は変わらないため
-        //要素の色を決定した後タグ色を変更させるメソッドを作用させた
+        /// <summary>
+        /// タグ要素の色を変更するメソッド
+        /// </summary>
+        /// <remarks>
+        ///  タグ要素の色を変更したい
+        ///ただプロパティを変更するだけでは色は変わらないため
+        ///要素の色を決定した後タグ色を変更させるメソッドを作用させた
+        ///</remarks>
         private void changeTagColor_Click(object sender, EventArgs e)
         {
             if (this.IsXML(this._loadedFilePath) && (this.colorDialogTag.ShowDialog() == DialogResult.OK))
@@ -129,9 +171,14 @@ namespace TextEditor
             }
         }
 
-        //テキスト入力時にタグの形式になっていれば自動で色がついてほしい
-        //タグ要素の色でテキストが入力されてはならない、かつ入力場所も変化してはならないため
-        //通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
+        /// <summary>
+        /// テキスト入力時にタグの形式になっていればタグ要素を着色するメソッド
+        /// </summary>
+        /// <remarks>
+        /// テキスト入力時にタグの形式になっていれば自動で色がついてほしい
+        ///タグ要素の色でテキストが入力されてはならない、かつ入力場所も変化してはならないため
+        ///通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
+        ///</remarks>
         private void textChanged(object sender, EventArgs e)
         {
             if (this.IsXML(this._loadedFilePath))
