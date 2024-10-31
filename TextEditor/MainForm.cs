@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace TextEditor
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             this.InitializeComponent();
         }
@@ -40,13 +40,13 @@ namespace TextEditor
         ///</remarks>
         private void ColoringTag()
         {
-            var tags = Regex.Matches(this.richTextBox.Text, @"<([^<>]+)>");
+            var tags = Regex.Matches(this.RichTextBox.Text, @"<([^<>]+)>");
             foreach (Match tag in tags)
             {
                 var index = tag.Groups[1].Index;
                 var tagLength = tag.Groups[1].Length;
-                this.richTextBox.Select(index, tagLength);
-                this.richTextBox.SelectionColor = this._tagColor;
+                this.RichTextBox.Select(index, tagLength);
+                this.RichTextBox.SelectionColor = this._tagColor;
             }
         }
 
@@ -62,11 +62,11 @@ namespace TextEditor
         ///</remarks>
         ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
         ///<exception cref="System.IO.FileNotFoundException">存在しないファイル名を入力した場合</exception>
-        private void load_Click(object sender, EventArgs e)
+        private void Load_Click(object sender, EventArgs e)
         {
-            if (this.openFileDialog.ShowDialog() == DialogResult.OK)
+            if (this.OpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this._loadedFilePath = this.openFileDialog.FileName;
+                this._loadedFilePath = this.OpenFileDialog.FileName;
             }
             this._encodeLoad = Encodes.GetEncode(this._encodeNum);
             try
@@ -74,12 +74,12 @@ namespace TextEditor
                 var lines = File.ReadLines(this._loadedFilePath, this._encodeLoad);
                 foreach (var line in lines)
                 {
-                    this.richTextBox.Text += line + Environment.NewLine;
+                    this.RichTextBox.Text += line + Environment.NewLine;
                 }
                 if (this.IsXML(this._loadedFilePath))
                 {
                     this.ColoringTag();
-                    this.richTextBox.SelectionColor = this._tagColor;
+                    this.RichTextBox.SelectionColor = this._tagColor;
                 }
             }
             catch (Exception ex)
@@ -98,13 +98,13 @@ namespace TextEditor
         ///Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
         ///</remarks>
         ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
-        private void save_Click(object sender, EventArgs e)
+        private void Save_Click(object sender, EventArgs e)
         {
             this._encodeSave = Encodes.GetEncode(this._encodeNum);
-            this.richTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.richTextBox.Text);
-            if (this.saveFileDialog.ShowDialog() == DialogResult.OK)
+            this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.RichTextBox.Text);
+            if (this.SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this._savingFilePath = this.saveFileDialog.FileName;
+                this._savingFilePath = this.SaveFileDialog.FileName;
             }
             if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
             {
@@ -113,7 +113,7 @@ namespace TextEditor
             }
             try
             {
-                File.WriteAllText(this._savingFilePath, this.richTextBox.Text, this._encodeSave);
+                File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
             }
             catch (Exception ex)
             {
@@ -129,13 +129,13 @@ namespace TextEditor
         ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
         ///各ボタンのエンコードに対応するint型の値を返すようにした
         ///</remarks>
-        private void utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
+        private void Utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
 
-        private void utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
+        private void Utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
 
-        private void utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 2;
+        private void Utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 2;
 
-        private void utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
+        private void Utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
 
         /// <summary>
         /// テキスト色変更のメソッド
@@ -145,11 +145,11 @@ namespace TextEditor
         ///なぜなら、タグ要素の色付けが一時的なものとなってしまうため
         ///テキスト色変更後にタグの色を付けなおした
         ///</remarks>
-        private void changeTextColor_Click(object sender, EventArgs e)
+        private void ChangeTextColor_Click(object sender, EventArgs e)
         {
-            if (this.colorDialogText.ShowDialog() == DialogResult.OK)
+            if (this.ColorDialogText.ShowDialog() == DialogResult.OK)
             {
-                this.richTextBox.ForeColor = this.colorDialogText.Color;
+                this.RichTextBox.ForeColor = this.ColorDialogText.Color;
                 this.ColoringTag();
             }
         }
@@ -162,11 +162,11 @@ namespace TextEditor
         ///ただプロパティを変更するだけでは色は変わらないため
         ///要素の色を決定した後タグ色を変更させるメソッドを作用させた
         ///</remarks>
-        private void changeTagColor_Click(object sender, EventArgs e)
+        private void ChangeTagColor_Click(object sender, EventArgs e)
         {
-            if (this.IsXML(this._loadedFilePath) && (this.colorDialogTag.ShowDialog() == DialogResult.OK))
+            if (this.IsXML(this._loadedFilePath) && (this.ColorDialogTag.ShowDialog() == DialogResult.OK))
             {
-                this._tagColor = this.colorDialogTag.Color;
+                this._tagColor = this.ColorDialogTag.Color;
                 this.ColoringTag();
             }
         }
@@ -179,14 +179,14 @@ namespace TextEditor
         ///タグ要素の色でテキストが入力されてはならない、かつ入力場所も変化してはならないため
         ///通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
         ///</remarks>
-        private void textChanged(object sender, EventArgs e)
+        private void TextChanging(object sender, EventArgs e)
         {
             if (this.IsXML(this._loadedFilePath))
             {
-                int currentPosition = this.richTextBox.SelectionStart;
+                int currentPosition = this.RichTextBox.SelectionStart;
                 this.ColoringTag();
-                this.richTextBox.SelectionStart = currentPosition;
-                this.richTextBox.SelectionLength = 0;
+                this.RichTextBox.SelectionStart = currentPosition;
+                this.RichTextBox.SelectionLength = 0;
             }
         }
 
