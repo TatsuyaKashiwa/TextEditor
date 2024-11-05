@@ -103,14 +103,17 @@ namespace TextEditor
             {
                 this._savingFilePath = this.SaveFileDialog.FileName;
             }
-            if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
+            /*if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
             {
-                using var fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite); 
+                using var fileStream = File.Open(this._savingFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite); 
                 
-            }
+            }*/
             try
             {
-                File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
+                using (var fileStream = File.Open(this._savingFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
+                }
             }
             catch (Exception ex)
             {
