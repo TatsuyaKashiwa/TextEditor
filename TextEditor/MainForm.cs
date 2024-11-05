@@ -56,7 +56,7 @@ namespace TextEditor
         /// <param name="ex">catchした例外</param>
         /// <remarks>
         /// ファイルを選択したエンコードで取り込み、XMLファイルであれば色を付けたい
-        ///すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため
+        ///すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため(ファイルサイズが莫大ならば→現状はインスタンス生成コストのほうが重いのでAllLinesで)
         ///テキストの読み込みとタグの色付けは一連の動作としたいため
         ///一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
         ///</remarks>
@@ -71,11 +71,8 @@ namespace TextEditor
             this._encodeLoad = Encodes.GetEncode(this._encodeNum);
             try
             {
-                var lines = File.ReadLines(this._loadedFilePath, this._encodeLoad);
-                foreach (var line in lines)
-                {
-                    this.RichTextBox.Text += line + Environment.NewLine;
-                }
+                var line = File.ReadAllText(this._loadedFilePath, this._encodeLoad);
+                    this.RichTextBox.Text = line;
                 if (this.IsXML(this._loadedFilePath))
                 {
                     this.ColoringTag();
@@ -108,8 +105,8 @@ namespace TextEditor
             }
             if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
             {
-                FileStream fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite);
-                fileStream.Close();
+                using var fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite); 
+                
             }
             try
             {
