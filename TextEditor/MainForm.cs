@@ -71,8 +71,7 @@ namespace TextEditor
             this._encodeLoad = Encodes.GetEncode(this._encodeNum);
             try
             {
-                var line = File.ReadAllText(this._loadedFilePath, this._encodeLoad);
-                    this.RichTextBox.Text = line;
+                this.RichTextBox.Text = File.ReadAllText(this._loadedFilePath, this._encodeLoad);
                 if (this.IsXML(this._loadedFilePath))
                 {
                     this.ColoringTag();
@@ -91,8 +90,9 @@ namespace TextEditor
         /// <param name="ex">catchした例外</param>
         /// <remarks>
         /// ファイルを指定したエンコードで保存、ファイルを新たに作り出すことも行いたい
-        ///ファイルのエンコードは保存先、ファイルの有無はテキストボックスからデータをファイルに書き出す時に行う必要があるため
-        ///Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
+        ///ファイルのエンコードはファイルを適切なエンコードとして保存するために必要であるので
+        ///Encodesクラスのメソッドでエンコードを変換し、
+        ///WriteAllTextはファイルが存在しない場合は作成するため、この部分をtry節で囲んだ
         ///</remarks>
         ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
         private void Save_Click(object sender, EventArgs e)
@@ -103,17 +103,9 @@ namespace TextEditor
             {
                 this._savingFilePath = this.SaveFileDialog.FileName;
             }
-            /*if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
-            {
-                using var fileStream = File.Open(this._savingFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite); 
-                
-            }*/
             try
             {
-                using (var fileStream = File.Open(this._savingFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                {
                     File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
-                }
             }
             catch (Exception ex)
             {
@@ -180,7 +172,7 @@ namespace TextEditor
         ///通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
         ///</remarks>
         private void TextChanging(object sender, EventArgs e)
-        {
+       {
             if (this.IsXML(this._loadedFilePath))
             {
                 int currentPosition = this.RichTextBox.SelectionStart;

@@ -36,6 +36,7 @@ namespace TextEditor
                     MessageBox.Show("該当するファイル名のファイルが見つかりませんでした");
                     break;
                 default:
+                    MessageBox.Show(e.ToString());
                     break;
             }
         }
