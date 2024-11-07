@@ -26,7 +26,7 @@ internal static class Encodes
     ///(通常の)配列としてアプリケーションで用いるエンコードを格納した
     ///(下記メソッドを介して取り扱われるためprivateとした)
     /// </remarks>
-    private static Encoding[] _encodings = {Encoding.UTF8,Encoding.Unicode,Encoding.BigEndianUnicode,Encoding.UTF32 };
+    private static Encoding[] s_encodings = {Encoding.UTF8,Encoding.Unicode,Encoding.BigEndianUnicode,Encoding.UTF32 };
 
     /// <summary>
     /// 上記の配列からエンコードを取り出す仕組みが必要となる
@@ -37,7 +37,7 @@ internal static class Encodes
     ///外部のコントロールの選択と上記の配列を対応させる必要があるため
     ///引数にコントロールの選択に対応する値を取るメソッドとして定義した
     ///</remarks>
-    internal static Encoding GetEncode(int i) => _encodings[i];
+    internal static Encoding GetEncode(int i) => s_encodings[i];
 
     /// <summary>
     /// 入力文字のバイト配列を選択したエンコードに変更し、入力文字のエンコードとバイト配列を一致させる
