@@ -80,7 +80,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            ErrorMessage.ShowErrorMessage(ex);
+            ErrorMessageShower.ShowErrorMessage(ex);
         }
     }
 
@@ -109,7 +109,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            ErrorMessage.ShowErrorMessage(ex);
+            ErrorMessageShower.ShowErrorMessage(ex);
         }
     }
 

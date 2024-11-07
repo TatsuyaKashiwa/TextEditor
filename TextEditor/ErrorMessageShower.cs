@@ -13,7 +13,7 @@ namespace TextEditor;
 /// Form1クラスが乱雑になるのを防ぐべく
 ///例外に対する処理を分離して記述するためのクラス
 ///</remarks>
-internal static class ErrorMessage
+internal static class ErrorMessageShower
 {
 
     /// <summary>
