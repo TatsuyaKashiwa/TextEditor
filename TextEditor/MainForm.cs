@@ -62,7 +62,7 @@ public partial class MainForm : Form
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
     ///<exception cref="System.IO.FileNotFoundException">存在しないファイル名を入力した場合</exception>
-    private void Load_Click(object sender, EventArgs e)
+    private void Load_OnClick(object sender, EventArgs e)
     {
         if (this.OpenFileDialog.ShowDialog() == DialogResult.OK)
         {
@@ -95,7 +95,7 @@ public partial class MainForm : Form
     ///WriteAllTextはファイルが存在しない場合は作成するため、この部分をtry節で囲んだ
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
-    private void Save_Click(object sender, EventArgs e)
+    private void Save_OnClick(object sender, EventArgs e)
     {
         this._encodeSave = Encodes.GetEncode(this._encodeNum);
         this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.RichTextBox.Text);
@@ -121,13 +121,13 @@ public partial class MainForm : Form
     ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
     ///各ボタンのエンコードに対応するint型の値を返すようにした
     ///</remarks>
-    private void Utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
+    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = 0;
 
-    private void Utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
+    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = 1;
 
-    private void Utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 2;
+    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = 2;
 
-    private void Utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
+    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = 3;
 
     /// <summary>
     /// テキスト色変更のメソッド
@@ -137,7 +137,7 @@ public partial class MainForm : Form
     ///なぜなら、タグ要素の色付けが一時的なものとなってしまうため
     ///テキスト色変更後にタグの色を付けなおした
     ///</remarks>
-    private void ChangeTextColor_Click(object sender, EventArgs e)
+    private void ChangeTextColor_OnClick(object sender, EventArgs e)
     {
         if (this.ColorDialogText.ShowDialog() == DialogResult.OK)
         {
@@ -154,7 +154,7 @@ public partial class MainForm : Form
     ///ただプロパティを変更するだけでは色は変わらないため
     ///要素の色を決定した後タグ色を変更させるメソッドを作用させた
     ///</remarks>
-    private void ChangeTagColor_Click(object sender, EventArgs e)
+    private void ChangeTagColor_OnClick(object sender, EventArgs e)
     {
         if (this.IsXML(this._loadedFilePath) && (this.ColorDialogTag.ShowDialog() == DialogResult.OK))
         {

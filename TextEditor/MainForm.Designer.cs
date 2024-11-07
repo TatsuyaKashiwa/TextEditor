@@ -69,7 +69,7 @@
             this.Load.TabIndex = 0;
             this.Load.Text = "load";
             this.Load.UseVisualStyleBackColor = true;
-            this.Load.Click += this.Load_Click;
+            this.Load.Click += this.Load_OnClick;
             // 
             // Save
             // 
@@ -80,7 +80,7 @@
             this.Save.TabIndex = 1;
             this.Save.Text = "save";
             this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += this.Save_Click;
+            this.Save.Click += this.Save_OnClick;
             // 
             // ChangeTextColor
             // 
@@ -91,7 +91,7 @@
             this.ChangeTextColor.TabIndex = 2;
             this.ChangeTextColor.Text = "文字色変更";
             this.ChangeTextColor.UseVisualStyleBackColor = true;
-            this.ChangeTextColor.Click += this.ChangeTextColor_Click;
+            this.ChangeTextColor.Click += this.ChangeTextColor_OnClick;
             // 
             // ChangeTagColor
             // 
@@ -101,7 +101,7 @@
             this.ChangeTagColor.TabIndex = 3;
             this.ChangeTagColor.Text = "タグ色変更(XML)";
             this.ChangeTagColor.UseVisualStyleBackColor = true;
-            this.ChangeTagColor.Click += this.ChangeTagColor_Click;
+            this.ChangeTagColor.Click += this.ChangeTagColor_OnClick;
             // 
             // flowLayoutPanel2
             // 
@@ -129,7 +129,7 @@
             this.Utf8.TabStop = true;
             this.Utf8.Text = "UTF-8";
             this.Utf8.UseVisualStyleBackColor = true;
-            this.Utf8.CheckedChanged += this.Utf8_CheckedChanged;
+            this.Utf8.CheckedChanged += this.Utf8_OnCheckedChanged;
             // 
             // Utf16le
             // 
@@ -142,7 +142,7 @@
             this.Utf16le.TabIndex = 1;
             this.Utf16le.Text = "UTF-16(LE)";
             this.Utf16le.UseVisualStyleBackColor = true;
-            this.Utf16le.CheckedChanged += this.Utf16le_CheckedChanged;
+            this.Utf16le.CheckedChanged += this.Utf16le_OnCheckedChanged;
             // 
             // Utf16be
             // 
@@ -155,7 +155,7 @@
             this.Utf16be.TabIndex = 2;
             this.Utf16be.Text = "UTF-16(BE)";
             this.Utf16be.UseVisualStyleBackColor = true;
-            this.Utf16be.CheckedChanged += this.Utf16be_CheckedChanged;
+            this.Utf16be.CheckedChanged += this.Utf16be_OnCheckedChanged;
             // 
             // Utf32
             // 
@@ -167,7 +167,7 @@
             this.Utf32.TabIndex = 3;
             this.Utf32.Text = "UTF-32";
             this.Utf32.UseVisualStyleBackColor = true;
-            this.Utf32.CheckedChanged += this.Utf32_CheckedChanged;
+            this.Utf32.CheckedChanged += this.Utf32_OnCheckedChanged;
             // 
             // RichTextBox
             // 
