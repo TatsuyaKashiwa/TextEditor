@@ -35,7 +35,7 @@ internal static class Encodes
     /// <returns>引数(ラジオボタンの選択)に対応したエンコード</returns>
     /// <remarks>
     ///外部のコントロールの選択と上記の配列を対応させる必要があるため
-    ///引数にコントロールの選択に対応する値を取るメソッドとして定義した
+    ///引数にコントロールの選択に対応する値を取るメソッドとして定義した。
     ///</remarks>
     internal static Encoding GetEncode(int i) => s_encodings[i];
 
