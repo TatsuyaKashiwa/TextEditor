@@ -1,223 +1,223 @@
-using System.Text;
+ï»¿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TextEditor
-{
-    enum Encode 
-    {
-        Utf8,
-        Utf16LE,
-        Utf16BE,
-        Utf32,
-    }
-    public partial class MainForm : Form
-    {
-        public MainForm()
-        {
-            this.InitializeComponent();
-        }
+namespace TextEditor;
 
-        private string _loadedFilePath = "";
-        private string _savingFilePath = "";
-        private Encode _encodeNum = Encode.Utf8;
-        private Encoding _encodeLoad = Encodes.GetEncode((int)Encode.Utf8);
-        private Encoding _encodeSave = Encodes.GetEncode((int)Encode.Utf8);
-        private Color _tagColor = Color.Blue;
+enum Encode 
+{
+    Utf8,
+    Utf16LE,
+    Utf16BE,
+    Utf32,
+}
+public partial class MainForm : Form
+{
+    public MainForm()
+    {
+        this.InitializeComponent();
+    }
+
+    private string _loadedFilePath = "";
+    private string _savingFilePath = "";
+    private Encode _encodeNum = Encode.Utf8;
+    private Encoding _encodeLoad = Encodes.GetEncode((int)Encode.Utf8);
+    private Encoding _encodeSave = Encodes.GetEncode((int)Encode.Utf8);
+    private Color _tagColor = Color.Blue;
+
+/// <summary>
+/// XMLãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚‹ã‹ã‚’åˆ¤å®šã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+/// </summary>
+/// <param name="path">åˆ¤å®šå¯¾è±¡ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+/// <returns>XMLãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚Œã°trueã‚’è¿”ã™</returns>
+/// <remarks>
+///xmlãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¿ã‚°ã«è‰²ã‚’ä»˜ã‘ã‚‹ãŸã‚ã«xmlãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚‹ã‹ã‚’åˆ¤å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+///åˆ¤å®šçµæœã‚’ boolã¨ã—ãŸã»ã†ãŒã€æ¡ä»¶å¼ã«ãã®ã¾ã¾çµ„ã¿è¾¼ã‚ã‚‹ã®ã§
+///å¼•æ•°ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ãŒ.xmlã§çµ‚ã‚ã‚‹ã‹ã®åˆ¤å®šã‚’IsMatchãƒ¡ã‚½ãƒƒãƒ‰ã§å®Ÿç¾ã—ãŸ
+/// </remarks>
+private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
     /// <summary>
-    /// XMLƒtƒ@ƒCƒ‹‚Å‚ ‚é‚©‚ğ”»’è‚·‚éƒƒ\ƒbƒh
+    /// (XML)ã‚¿ã‚°è¦ç´ ã®è‰²ã‚’å¤‰æ›´
     /// </summary>
-    /// <param name="path">”»’è‘ÎÛ‚Ìƒtƒ@ƒCƒ‹ƒpƒX</param>
-    /// <returns>XMLƒtƒ@ƒCƒ‹‚Å‚ ‚ê‚Îtrue‚ğ•Ô‚·</returns>
-    /// <remarks>
-    ///xmlƒtƒ@ƒCƒ‹‚Ìƒ^ƒO‚ÉF‚ğ•t‚¯‚é‚½‚ß‚Éxmlƒtƒ@ƒCƒ‹‚Å‚ ‚é‚©‚ğ”»’è‚·‚é•K—v‚ª‚ ‚é
-    ///”»’èŒ‹‰Ê‚ğ bool‚Æ‚µ‚½‚Ù‚¤‚ªAğŒ®‚É‚»‚Ì‚Ü‚Ü‘g‚İ‚ß‚é‚Ì‚Å
-    ///ˆø”‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ª.xml‚ÅI‚í‚é‚©‚Ì”»’è‚ğIsMatchƒƒ\ƒbƒh‚ÅÀŒ»‚µ‚½
-    /// </remarks>
-    private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
+    ///<remarks>
+    ///ã‚¿ã‚°ã®è¦ç´ ã®ã¿ã‚’åˆ¥ã®è‰²ã¸å¤‰æ›´ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+    ///ã‚¿ã‚°ã«åˆè‡´ã™ã‚‹è¡¨ç¾ã‚’è¦‹ã¤ã‘å‡ºã—ã¦ã€è¦ç´ ã ã‘ã‚’è‰²ä»˜ã‘ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ãŸã‚
+    ///ã‚¿ã‚°ã®æ¡ä»¶ã«åˆè‡´ã™ã‚‹è¡¨ç¾ã‚’é…åˆ—ã«æ ¼ç´ã—
+    ///è¦ç´ éƒ¨åˆ†ã ã‘ã‚’ã‚¿ã‚°è‰²ã§æŒ‡å®šã—ãŸè‰²ã¸å¤‰æ›´ã•ã›ãŸã€‚
+    ///</remarks>
+    private void ColoringTag()
+    {
+        var tags = Regex.Matches(this.RichTextBox.Text, @"<([^<>]+)>");
 
-        /// <summary>
-        /// (XML)ƒ^ƒO—v‘f‚ÌF‚ğ•ÏX
-        /// </summary>
-        ///<remarks>
-        ///ƒ^ƒO‚Ì—v‘f‚Ì‚İ‚ğ•Ê‚ÌF‚Ö•ÏX‚·‚é•K—v‚ª‚ ‚é
-        ///ƒ^ƒO‚É‡’v‚·‚é•\Œ»‚ğŒ©‚Â‚¯o‚µ‚ÄA—v‘f‚¾‚¯‚ğF•t‚¯‚·‚é•K—v‚ª‚ ‚é‚½‚ß
-        ///ƒ^ƒO‚ÌğŒ‚É‡’v‚·‚é•\Œ»‚ğ”z—ñ‚ÉŠi”[‚µ
-        ///—v‘f•”•ª‚¾‚¯‚ğƒ^ƒOF‚Åw’è‚µ‚½F‚Ö•ÏX‚³‚¹‚½B
-        ///</remarks>
-        private void ColoringTag()
+        foreach (Match tag in tags)
         {
-            var tags = Regex.Matches(this.RichTextBox.Text, @"<([^<>]+)>");
+            var index = tag.Groups[1].Index;
+            var tagLength = tag.Groups[1].Length;
+            this.RichTextBox.Select(index, tagLength);
+            this.RichTextBox.SelectionColor = this._tagColor;
+        }
+    }
 
-            foreach (Match tag in tags)
+    /// <summary>
+    /// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿(loadãƒœã‚¿ãƒ³æŠ¼ä¸‹æ™‚ã®å‹•ä½œ)ã«å¯¾å¿œã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <param name="ex">catchã—ãŸä¾‹å¤–</param>
+    /// <remarks>
+    /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ãŸã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã§å–ã‚Šè¾¼ã¿ã€XMLãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚Œã°è‰²ã‚’ä»˜ã‘ãŸã„
+    ///ã™ã¹ã¦å–ã‚Šè¾¼ã‚€ReadAllLinesãƒ¡ã‚½ãƒƒãƒ‰ã§ã¯å‹•ä½œãŒé‡ããªã‚Šã†ã‚‹ãŸã‚
+    ///ãƒ†ã‚­ã‚¹ãƒˆã®èª­ã¿è¾¼ã¿ã¨ã‚¿ã‚°ã®è‰²ä»˜ã‘ã¯ä¸€é€£ã®å‹•ä½œã¨ã—ãŸã„ãŸã‚
+    ///ä¸€è¡Œãšã¤è¡¨ç¤ºé ˜åŸŸã«è¿½åŠ ã—ãŸå¾Œã€ãƒ•ã‚¡ã‚¤ãƒ«å–ã‚Šè¾¼ã¿ä»¥é™ã®æ“ä½œã‚’tryç¯€ã§å›²ã‚“ã 
+    ///</remarks>
+    ///<exception cref="System.ArgumentException">ãƒ•ã‚¡ã‚¤ãƒ«æœªé¸æŠã®å ´åˆ</exception>
+    ///<exception cref="System.IO.FileNotFoundException">å­˜åœ¨ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ãŸå ´åˆ</exception>
+    private void Load_Click(object sender, EventArgs e)
+    {
+        if (this.OpenFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            this._loadedFilePath = this.OpenFileDialog.FileName;
+        }
+        
+        this._encodeLoad = Encodes.GetEncode((int)this._encodeNum);
+
+        try
+        {
+            var lines = File.ReadLines(this._loadedFilePath, this._encodeLoad);
+
+            foreach (var line in lines)
             {
-                var index = tag.Groups[1].Index;
-                var tagLength = tag.Groups[1].Length;
-                this.RichTextBox.Select(index, tagLength);
+                this.RichTextBox.Text += line + Environment.NewLine;
+            }
+            if (this.IsXML(this._loadedFilePath))
+            {
+                this.ColoringTag();
                 this.RichTextBox.SelectionColor = this._tagColor;
             }
         }
-
-        /// <summary>
-        /// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ(loadƒ{ƒ^ƒ“‰Ÿ‰º‚Ì“®ì)‚É‘Î‰‚·‚éƒƒ\ƒbƒh
-        /// </summary>
-        /// <param name="ex">catch‚µ‚½—áŠO</param>
-        /// <remarks>
-        /// ƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚µ‚½ƒGƒ“ƒR[ƒh‚Åæ‚è‚İAXMLƒtƒ@ƒCƒ‹‚Å‚ ‚ê‚ÎF‚ğ•t‚¯‚½‚¢
-        ///‚·‚×‚Äæ‚è‚ŞReadAllLinesƒƒ\ƒbƒh‚Å‚Í“®ì‚ªd‚­‚È‚è‚¤‚é‚½‚ß
-        ///ƒeƒLƒXƒg‚Ì“Ç‚İ‚İ‚Æƒ^ƒO‚ÌF•t‚¯‚Íˆê˜A‚Ì“®ì‚Æ‚µ‚½‚¢‚½‚ß
-        ///ˆês‚¸‚Â•\¦—Ìˆæ‚É’Ç‰Á‚µ‚½ŒãAƒtƒ@ƒCƒ‹æ‚è‚İˆÈ~‚Ì‘€ì‚ğtryß‚ÅˆÍ‚ñ‚¾
-        ///</remarks>
-        ///<exception cref="System.ArgumentException">ƒtƒ@ƒCƒ‹–¢‘I‘ğ‚Ìê‡</exception>
-        ///<exception cref="System.IO.FileNotFoundException">‘¶İ‚µ‚È‚¢ƒtƒ@ƒCƒ‹–¼‚ğ“ü—Í‚µ‚½ê‡</exception>
-        private void Load_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            if (this.OpenFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                this._loadedFilePath = this.OpenFileDialog.FileName;
-            }
-            
-            this._encodeLoad = Encodes.GetEncode((int)this._encodeNum);
-
-            try
-            {
-                var lines = File.ReadLines(this._loadedFilePath, this._encodeLoad);
-
-                foreach (var line in lines)
-                {
-                    this.RichTextBox.Text += line + Environment.NewLine;
-                }
-                if (this.IsXML(this._loadedFilePath))
-                {
-                    this.ColoringTag();
-                    this.RichTextBox.SelectionColor = this._tagColor;
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage.ShowErrorMessage(ex);
-            }
-        }
-
-        /// <summary>
-        /// ƒtƒ@ƒCƒ‹•Û‘¶(saveƒ{ƒ^ƒ“‰Ÿ‰º)‚É‘Î‰‚·‚éƒƒ\ƒbƒh
-        /// </summary>
-        /// <param name="ex">catch‚µ‚½—áŠO</param>
-        /// <remarks>
-        /// ƒtƒ@ƒCƒ‹‚ğw’è‚µ‚½ƒGƒ“ƒR[ƒh‚Å•Û‘¶Aƒtƒ@ƒCƒ‹‚ğV‚½‚Éì‚èo‚·‚±‚Æ‚às‚¢‚½‚¢
-        ///ƒtƒ@ƒCƒ‹‚ÌƒGƒ“ƒR[ƒh‚Í•Û‘¶æAƒtƒ@ƒCƒ‹‚Ì—L–³‚ÍƒeƒLƒXƒgƒ{ƒbƒNƒX‚©‚çƒf[ƒ^‚ğƒtƒ@ƒCƒ‹‚É‘‚«o‚·‚És‚¤•K—v‚ª‚ ‚é‚½‚ß
-        ///EncodesƒNƒ‰ƒX‚Ìƒƒ\ƒbƒh‚ÅƒGƒ“ƒR[ƒh‚ğ•ÏŠ·‚µAƒtƒ@ƒCƒ‹‚Ö‚Ìƒf[ƒ^‘‚«o‚µ‚Ì‚İtryß‚ÅˆÍ‚ñ‚¾
-        ///</remarks>
-        ///<exception cref="System.ArgumentException">ƒtƒ@ƒCƒ‹–¢‘I‘ğ‚Ìê‡</exception>
-        private void Save_Click(object sender, EventArgs e)
-        {
-
-            this._encodeSave = Encodes.GetEncode((int)this._encodeNum);
-            this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.RichTextBox.Text);
-
-            if (this.SaveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                this._savingFilePath = this.SaveFileDialog.FileName;
-            }
-            if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
-            {
-                FileStream fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite);
-                fileStream.Close();
-            }
-            try
-            {
-                File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage.ShowErrorMessage(ex);
-            }
-        }
-
-        /// <summary>
-        /// ƒ‰ƒWƒIƒ{ƒ^ƒ“‚É‘Î‰‚·‚éƒGƒ“ƒR[ƒhi‚É‘Î‰‚·‚éƒCƒ“ƒfƒbƒNƒXj‚ğ‘I‘ğ‚·‚éƒƒ\ƒbƒh
-        /// </summary>
-        /// <remarks>
-        /// ƒ‰ƒWƒIƒ{ƒ^ƒ“‚Ì‘I‘ğ‚Å“Ç‚İ‚İ/•Û‘¶‚ÌƒGƒ“ƒR[ƒh‚ğ•Ï‚¦‚ç‚ê‚é‚æ‚¤‚É‚µ‚½‚¢
-        ///ƒ‰ƒWƒIƒ{ƒ^ƒ“‚Ì‘I‘ğ‚ğƒGƒ“ƒR[ƒh‚ğ•Ô‚·ƒƒ\ƒbƒh‚É“n‚·•K—v‚ª‚ ‚é‚½‚ß
-        ///Šeƒ{ƒ^ƒ“‚ÌƒGƒ“ƒR[ƒh‚É‘Î‰‚·‚éintŒ^‚Ì’l‚ğ•Ô‚·‚æ‚¤‚É‚µ‚½
-        ///</remarks>
-        private void Utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf8;
-
-        private void Utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16LE;
-
-        private void Utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16BE;
-
-        private void Utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf32;
-
-        /// <summary>
-        /// ƒeƒLƒXƒgF•ÏX‚Ìƒƒ\ƒbƒh
-        /// </summary>
-        private void ChangeTextColor_Click(object sender, EventArgs e)
-        {
-            if (this.ColorDialogForText.ShowDialog() == DialogResult.OK)
-            {
-                this.RichTextBox.ForeColor = this.ColorDialogForText.Color;
-                if (this.IsXML(this._loadedFilePath)) 
-                {
-                    this.ColoringTag();
-                }
-            }
-        }
-
-        /// <summary>
-        /// ƒ^ƒO—v‘f‚ÌF‚ğ•ÏX‚·‚éƒƒ\ƒbƒh
-        /// </summary>
-        /// <remarks>
-        ///  ƒ^ƒO—v‘f‚ÌF‚ğ•ÏX‚µ‚½‚¢
-        ///‚½‚¾ƒvƒƒpƒeƒB‚ğ•ÏX‚·‚é‚¾‚¯‚Å‚ÍF‚Í•Ï‚í‚ç‚È‚¢‚½‚ß
-        ///—v‘f‚ÌF‚ğŒˆ’è‚µ‚½Œãƒ^ƒOF‚ğ•ÏX‚³‚¹‚éƒƒ\ƒbƒh‚ğì—p‚³‚¹‚½
-        ///</remarks>
-        private void ChangeTagColor_Click(object sender, EventArgs e)
-        {
-            if (this.IsXML(this._loadedFilePath) && (this.ColorDialogForTag.ShowDialog() == DialogResult.OK))
-            {
-                this._tagColor = this.ColorDialogForTag.Color;
-                this.ColoringTag();
-            }
-        }
-
-        /// <summary>
-        /// ƒeƒLƒXƒg“ü—Í‚Éƒ^ƒO‚ÌŒ`®‚É‚È‚Á‚Ä‚¢‚ê‚Îƒ^ƒO—v‘f‚ğ’…F‚·‚éƒƒ\ƒbƒh
-        /// </summary>
-        /// <remarks>
-        /// ƒeƒLƒXƒg“ü—Í‚Éƒ^ƒO‚ÌŒ`®‚É‚È‚Á‚Ä‚¢‚ê‚Î©“®‚ÅF‚ª‚Â‚¢‚Ä‚Ù‚µ‚¢
-        ///ƒ^ƒO—v‘f‚ÌF‚ÅƒeƒLƒXƒg‚ª“ü—Í‚³‚ê‚Ä‚Í‚È‚ç‚È‚¢A‚©‚Â“ü—ÍêŠ‚à•Ï‰»‚µ‚Ä‚Í‚È‚ç‚È‚¢‚½‚ß
-        ///’Êí‚Ìƒ^ƒO—v‘fF•ÏXƒƒ\ƒbƒh‚É‰Á‚¦‚Ä“ü—ÍˆÊ’u‚ğŒ³‚É–ß‚µAƒ^ƒO‚Ì‘I‘ğ‚ğ‰ğœ‚·‚é‹Lq‚ğ’Ç‰Á‚µ‚½
-        ///</remarks>
-        private void TextChanging(object sender, EventArgs e)
-        {
-            if (this.IsXML(this._loadedFilePath))
-            {
-                int currentPosition = this.RichTextBox.SelectionStart;
-                this.ColoringTag();
-
-                this.RichTextBox.SelectionStart = currentPosition;
-                this.RichTextBox.SelectionLength = 0;
-            }
-        }
-
-    /// <summary>
-    /// WriteAllText‚Ì©ì”Åƒƒ\ƒbƒh
-    /// </summary>
-    /// <param name="path">•Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX</param>
-    /// <param name="savetext">•Û‘¶‚·‚éƒeƒLƒXƒg</param>
-    /// <param name="encode">ƒGƒ“ƒR[ƒh</param>
-    /// <remarks>
-    /// StreamWriter‚ğnew‚·‚é‚±‚Æ‚Å(ƒtƒ@ƒCƒ‹ì¬E)FileStream‚ğOpen‚µ‚Ä
-    /// ˆø”‚Æ‚µ‚Äó‚¯‚½•Û‘¶ƒeƒLƒXƒg‚ğAStreamWriter.Write‚Åƒtƒ@ƒCƒ‹‚Ö‘‚«‚İ
-    /// </remarks>
-    private void MyWriteAllText(string path, string savetext, Encoding encode) 
-    {
-        using (var sw = new StreamWriter(path,false,encode)) 
-        {
-            sw.Write(savetext);
+            ErrorMessageShower.ShowErrorMessage(ex);
         }
     }
+
+    /// <summary>
+    /// ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜(saveãƒœã‚¿ãƒ³æŠ¼ä¸‹)ã«å¯¾å¿œã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <param name="ex">catchã—ãŸä¾‹å¤–</param>
+    /// <remarks>
+    /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ãŸã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã§ä¿å­˜ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ–°ãŸã«ä½œã‚Šå‡ºã™ã“ã¨ã‚‚è¡Œã„ãŸã„
+    ///ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã¯ä¿å­˜å…ˆã€ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ‰ç„¡ã¯ãƒ†ã‚­ã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãå‡ºã™æ™‚ã«è¡Œã†å¿…è¦ãŒã‚ã‚‹ãŸã‚
+    ///Encodesã‚¯ãƒ©ã‚¹ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã‚’å¤‰æ›ã—ã€ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‡ãƒ¼ã‚¿æ›¸ãå‡ºã—ã®ã¿tryç¯€ã§å›²ã‚“ã 
+    ///</remarks>
+    ///<exception cref="System.ArgumentException">ãƒ•ã‚¡ã‚¤ãƒ«æœªé¸æŠã®å ´åˆ</exception>
+    private void Save_Click(object sender, EventArgs e)
+    {
+
+        this._encodeSave = Encodes.GetEncode((int)this._encodeNum);
+        this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.RichTextBox.Text);
+
+        if (this.SaveFileDialog.ShowDialog() == DialogResult.OK)
+        {
+            this._savingFilePath = this.SaveFileDialog.FileName;
+        }
+        if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
+        {
+            FileStream fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite);
+            fileStream.Close();
+        }
+        try
+        {
+            File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessageShower.ShowErrorMessage(ex);
+        }
+    }
+
+    /// <summary>
+    /// ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã«å¯¾å¿œã™ã‚‹ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ï¼ˆã«å¯¾å¿œã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼‰ã‚’é¸æŠã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <remarks>
+    /// ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã®é¸æŠã§èª­ã¿è¾¼ã¿/ä¿å­˜ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã‚’å¤‰ãˆã‚‰ã‚Œã‚‹ã‚ˆã†ã«ã—ãŸã„
+    ///ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã®é¸æŠã‚’ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™ãƒ¡ã‚½ãƒƒãƒ‰ã«æ¸¡ã™å¿…è¦ãŒã‚ã‚‹ãŸã‚
+    ///å„ãƒœã‚¿ãƒ³ã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰ã«å¯¾å¿œã™ã‚‹intå‹ã®å€¤ã‚’è¿”ã™ã‚ˆã†ã«ã—ãŸ
+    ///</remarks>
+    private void Utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf8;
+
+    private void Utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16LE;
+
+    private void Utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16BE;
+
+    private void Utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf32;
+
+    /// <summary>
+    /// ãƒ†ã‚­ã‚¹ãƒˆè‰²å¤‰æ›´ã®ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    private void ChangeTextColor_Click(object sender, EventArgs e)
+    {
+        if (this.ColorDialogForText.ShowDialog() == DialogResult.OK)
+        {
+            this.RichTextBox.ForeColor = this.ColorDialogForText.Color;
+            if (this.IsXML(this._loadedFilePath)) 
+            {
+                this.ColoringTag();
+            }
+        }
+    }
+
+    /// <summary>
+    /// ã‚¿ã‚°è¦ç´ ã®è‰²ã‚’å¤‰æ›´ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <remarks>
+    ///  ã‚¿ã‚°è¦ç´ ã®è‰²ã‚’å¤‰æ›´ã—ãŸã„
+    ///ãŸã ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’å¤‰æ›´ã™ã‚‹ã ã‘ã§ã¯è‰²ã¯å¤‰ã‚ã‚‰ãªã„ãŸã‚
+    ///è¦ç´ ã®è‰²ã‚’æ±ºå®šã—ãŸå¾Œã‚¿ã‚°è‰²ã‚’å¤‰æ›´ã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ä½œç”¨ã•ã›ãŸ
+    ///</remarks>
+    private void ChangeTagColor_Click(object sender, EventArgs e)
+    {
+        if (this.IsXML(this._loadedFilePath) && (this.ColorDialogForTag.ShowDialog() == DialogResult.OK))
+        {
+            this._tagColor = this.ColorDialogForTag.Color;
+            this.ColoringTag();
+        }
+    }
+
+    /// <summary>
+    /// ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›æ™‚ã«ã‚¿ã‚°ã®å½¢å¼ã«ãªã£ã¦ã„ã‚Œã°ã‚¿ã‚°è¦ç´ ã‚’ç€è‰²ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
+    /// <remarks>
+    /// ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›æ™‚ã«ã‚¿ã‚°ã®å½¢å¼ã«ãªã£ã¦ã„ã‚Œã°è‡ªå‹•ã§è‰²ãŒã¤ã„ã¦ã»ã—ã„
+    ///ã‚¿ã‚°è¦ç´ ã®è‰²ã§ãƒ†ã‚­ã‚¹ãƒˆãŒå…¥åŠ›ã•ã‚Œã¦ã¯ãªã‚‰ãªã„ã€ã‹ã¤å…¥åŠ›å ´æ‰€ã‚‚å¤‰åŒ–ã—ã¦ã¯ãªã‚‰ãªã„ãŸã‚
+    ///é€šå¸¸ã®ã‚¿ã‚°è¦ç´ è‰²å¤‰æ›´ãƒ¡ã‚½ãƒƒãƒ‰ã«åŠ ãˆã¦å…¥åŠ›ä½ç½®ã‚’å…ƒã«æˆ»ã—ã€ã‚¿ã‚°ã®é¸æŠã‚’è§£é™¤ã™ã‚‹è¨˜è¿°ã‚’è¿½åŠ ã—ãŸ
+    ///</remarks>
+    private void TextChanging(object sender, EventArgs e)
+    {
+        if (this.IsXML(this._loadedFilePath))
+        {
+            int currentPosition = this.RichTextBox.SelectionStart;
+            this.ColoringTag();
+
+            this.RichTextBox.SelectionStart = currentPosition;
+            this.RichTextBox.SelectionLength = 0;
+        }
+    }
+
+/// <summary>
+/// WriteAllTextã®è‡ªä½œç‰ˆãƒ¡ã‚½ãƒƒãƒ‰
+/// </summary>
+/// <param name="path">ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+/// <param name="savetext">ä¿å­˜ã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ</param>
+/// <param name="encode">ã‚¨ãƒ³ã‚³ãƒ¼ãƒ‰</param>
+/// <remarks>
+/// StreamWriterã‚’newã™ã‚‹ã“ã¨ã§(ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆãƒ»)FileStreamã‚’Openã—ã¦
+/// å¼•æ•°ã¨ã—ã¦å—ã‘ãŸä¿å­˜ãƒ†ã‚­ã‚¹ãƒˆã‚’ã€StreamWriter.Writeã§ãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãè¾¼ã¿
+/// </remarks>
+private void MyWriteAllText(string path, string savetext, Encoding encode) 
+{
+    using (var sw = new StreamWriter(path,false,encode)) 
+    {
+        sw.Write(savetext);
+    }
+}
 
 }
