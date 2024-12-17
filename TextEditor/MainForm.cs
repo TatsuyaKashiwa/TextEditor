@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace TextEditor;
 
-enum Encode 
+enum EncodeName 
 {
     Utf8,
     Utf16LE,
@@ -19,9 +19,9 @@ public partial class MainForm : Form
 
     private string _loadedFilePath = "";
     private string _savingFilePath = "";
-    private Encode _encodeNum = Encode.Utf8;
-    private Encoding _encodeLoad = Encodes.GetEncode((int)Encode.Utf8);
-    private Encoding _encodeSave = Encodes.GetEncode((int)Encode.Utf8);
+    private EncodeName _encodeNum = EncodeName.Utf8;
+    private Encoding _encodeLoad = Encodes.GetEncode((int)EncodeName.Utf8);
+    private Encoding _encodeSave = Encodes.GetEncode((int)EncodeName.Utf8);
     private Color _tagColor = Color.Blue;
 
     /// <summary>
@@ -142,13 +142,13 @@ public partial class MainForm : Form
     ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
     ///各ボタンのエンコードに対応するint型の値を返すようにした
     ///</remarks>
-    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf8;
+    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf8;
 
-    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16LE;
+    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf16LE;
 
-    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16BE;
+    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf16BE;
 
-    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf32;
+    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf32;
 
     /// <summary>
     /// テキスト色変更のメソッド

@@ -175,7 +175,7 @@
             this.RichTextBox.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
             this.RichTextBox.Location = new Point(0, 142);
             this.RichTextBox.Name = "RichTextBox";
-            this.RichTextBox.Size = new Size(784, 580);
+            this.RichTextBox.Size = new Size(804, 580);
             this.RichTextBox.TabIndex = 2;
             this.RichTextBox.Text = "";
             this.RichTextBox.TextChanged += this.TextChanging;
@@ -194,7 +194,7 @@
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(784, 722);
+            this.ClientSize = new Size(804, 722);
             this.Controls.Add(this.RichTextBox);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.flowLayoutPanel1);
