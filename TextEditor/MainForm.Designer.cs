@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.flowLayoutPanel1 = new FlowLayoutPanel();
-            this.Load = new Button();
+            this.LoadButton = new Button();
             this.Save = new Button();
             this.ChangeTextColor = new Button();
             this.ChangeTagColor = new Button();
@@ -50,7 +50,7 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.Load);
+            this.flowLayoutPanel1.Controls.Add(this.LoadButton);
             this.flowLayoutPanel1.Controls.Add(this.Save);
             this.flowLayoutPanel1.Controls.Add(this.ChangeTextColor);
             this.flowLayoutPanel1.Controls.Add(this.ChangeTagColor);
@@ -60,16 +60,16 @@
             this.flowLayoutPanel1.Size = new Size(786, 54);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
-            // Load
+            // LoadButton
             // 
-            this.Load.Location = new Point(0, 12);
-            this.Load.Margin = new Padding(0, 3, 60, 3);
-            this.Load.Name = "Load";
-            this.Load.Size = new Size(150, 30);
-            this.Load.TabIndex = 0;
-            this.Load.Text = "load";
-            this.Load.UseVisualStyleBackColor = true;
-            this.Load.Click += this.Load_OnClick;
+            this.LoadButton.Location = new Point(0, 12);
+            this.LoadButton.Margin = new Padding(0, 3, 60, 3);
+            this.LoadButton.Name = "LoadButton";
+            this.LoadButton.Size = new Size(150, 30);
+            this.LoadButton.TabIndex = 0;
+            this.LoadButton.Text = "load";
+            this.LoadButton.UseVisualStyleBackColor = true;
+            this.LoadButton.Click += this.Load_OnClick;
             // 
             // Save
             // 
@@ -210,7 +210,7 @@
         #endregion
 
         private FlowLayoutPanel flowLayoutPanel1;
-        private Button Load;
+        private Button LoadButton;
         private Button Save;
         private Button ChangeTextColor;
         private Button ChangeTagColor;
