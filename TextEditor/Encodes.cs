@@ -9,11 +9,6 @@ namespace TextEditor
     /// <summary>
     /// エンコードに関わるクラス
     /// </summary>
-    /// <remarks>
-    /// エンコードに関することはForm1クラス内の様々な所に現れている
-    ///なので、エンコード関連の処理をひとまとめにしたほうが効率が良く読みやすくなると思われる
-    ///エンコード関連のことをまとめたユーティリティクラスを作成した
-    ///</remarks>
 
     internal static class Encodes
     {

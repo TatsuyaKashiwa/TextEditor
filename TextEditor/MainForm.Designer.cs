@@ -40,8 +40,8 @@
             this.Utf32 = new RadioButton();
             this.RichTextBox = new RichTextBox();
             this.OpenFileDialog = new OpenFileDialog();
-            this.ColorDialogText = new ColorDialog();
-            this.ColorDialogTag = new ColorDialog();
+            this.ColorDialogForText = new ColorDialog();
+            this.ColorDialogForTag = new ColorDialog();
             this.SaveFileDialog = new SaveFileDialog();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -172,9 +172,10 @@
             // RichTextBox
             // 
             this.RichTextBox.Dock = DockStyle.Bottom;
-            this.RichTextBox.Location = new Point(0, 139);
+            this.RichTextBox.Font = new Font("Yu Gothic UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            this.RichTextBox.Location = new Point(0, 142);
             this.RichTextBox.Name = "RichTextBox";
-            this.RichTextBox.Size = new Size(800, 622);
+            this.RichTextBox.Size = new Size(784, 580);
             this.RichTextBox.TabIndex = 2;
             this.RichTextBox.Text = "";
             this.RichTextBox.TextChanged += this.TextChanging;
@@ -193,7 +194,7 @@
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(800, 761);
+            this.ClientSize = new Size(784, 722);
             this.Controls.Add(this.RichTextBox);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.flowLayoutPanel1);
@@ -220,8 +221,8 @@
         private RadioButton Utf32;
         private RichTextBox RichTextBox;
         private OpenFileDialog OpenFileDialog;
-        private ColorDialog ColorDialogText;
-        private ColorDialog ColorDialogTag;
+        private ColorDialog ColorDialogForText;
+        private ColorDialog ColorDialogForTag;
         private SaveFileDialog SaveFileDialog;
     }
 }
