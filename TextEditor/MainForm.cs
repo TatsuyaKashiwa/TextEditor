@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace TextEditor;
 
+/// <summary>
+/// エンコード名をEncodesクラスの配列のインデックスに対応させるenum
+/// </summary>
 enum EncodeName 
 {
     Utf8,
@@ -17,11 +20,29 @@ public partial class MainForm : Form
         this.InitializeComponent();
     }
 
+    /// <summary>
+    /// 読み込みファイルのファイルパス
+    /// </summary>
     private string _loadedFilePath = "";
+    /// <summary>
+    /// 保存先ファイルのファイルパス
+    /// </summary>
     private string _savingFilePath = "";
-    private EncodeName _encodeNum = EncodeName.Utf8;
+    /// <summary>
+    /// 選択されたエンコード名の列挙値
+    /// </summary>
+    private EncodeName _encodeName = EncodeName.Utf8;
+    /// <summary>
+    /// 読み込み時エンコード
+    /// </summary>
     private Encoding _encodeLoad = Encodes.GetEncode((int)EncodeName.Utf8);
+    /// <summary>
+    /// 保存時エンコード
+    /// </summary>
     private Encoding _encodeSave = Encodes.GetEncode((int)EncodeName.Utf8);
+    /// <summary>
+    /// XMLタグ要素色
+    /// </summary>
     private Color _tagColor = Color.Blue;
 
     /// <summary>
@@ -30,9 +51,7 @@ public partial class MainForm : Form
     /// <param name="path">判定対象のファイルパス</param>
     /// <returns>XMLファイルであればtrueを返す</returns>
     /// <remarks>
-    ///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
-    ///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
-    ///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
+    ///xmlファイル(パスの末尾が.xml)であればtrueを返すメソッド
     /// </remarks>
     private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
@@ -40,10 +59,8 @@ public partial class MainForm : Form
     /// (XML)タグ要素の色を変更
     /// </summary>
     ///<remarks>
-    ///タグの要素のみを別の色へ変更する必要がある
-    ///タグに合致する表現を見つけ出して、要素だけを色付けする必要があるため
-    ///タグの条件に合致する表現を配列に格納し
-    ///要素部分だけをタグ色で指定した色へ変更させた。
+    ///XMLタグ要素(/を含む)のみ指定した色へ変更する
+    ///正規表現のGroupを用いることで正規表現と合致した部分以外がタグ要素の文字色となることを防ぐ
     ///</remarks>
     private void ColoringTag()
     {
@@ -59,14 +76,12 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// ファイル読み込み(loadボタン押下時の動作)に対応するメソッド
+    /// ファイル読み込みに対応するメソッド(loadボタン押下時のイベントハンドラ)
     /// </summary>
     /// <param name="ex">catchした例外</param>
     /// <remarks>
-    /// ファイルを選択したエンコードで取り込み、XMLファイルであれば色を付けたい
-    ///すべて取り込むReadAllLinesメソッドでは動作が重くなりうるため
-    ///テキストの読み込みとタグの色付けは一連の動作としたいため
-    ///一行ずつ表示領域に追加した後、ファイル取り込み以降の操作をtry節で囲んだ
+    /// ダイアログで選択したファイルを読み込み、xmlファイルであればタグ要素は指定色で表示させる。
+    /// 例外発生時はエラーメッセージをユーザに向けて表示させる。
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
     ///<exception cref="System.IO.FileNotFoundException">存在しないファイル名を入力した場合</exception>
@@ -77,7 +92,7 @@ public partial class MainForm : Form
             this._loadedFilePath = this.OpenFileDialog.FileName;
         }
 
-        this._encodeLoad = Encodes.GetEncode((int)this._encodeNum);
+        this._encodeLoad = Encodes.GetEncode((int)this._encodeName);
 
         try
         {
@@ -100,20 +115,22 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// ファイル保存(saveボタン押下)に対応するメソッド
+    /// ファイル保存に対応するメソッド(saveボタン押下のイベントハンドラ)
     /// </summary>
     /// <param name="ex">catchした例外</param>
     /// <remarks>
-    /// ファイルを指定したエンコードで保存、ファイルを新たに作り出すことも行いたい
-    ///ファイルのエンコードは保存先、ファイルの有無はテキストボックスからデータをファイルに書き出す時に行う必要があるため
-    ///Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
+    ///ファイルを指定したエンコードで保存する。
+    ///ディレクトリ内に指定した名前のファイルが存在しない場合は新規にファイル作成を行う
+    ///例外発生時はエラーメッセージをユーザに向けて表示させる。
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
     private void Save_OnClick(object sender, EventArgs e)
     {
 
-        this._encodeSave = Encodes.GetEncode((int)this._encodeNum);
-        this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad, this._encodeSave, this.RichTextBox.Text);
+        this._encodeSave = Encodes.GetEncode((int)this._encodeName);
+        this.RichTextBox.Text = Encodes.ChangeEncode(this._encodeLoad,
+                                                     this._encodeSave,
+                                                     this.RichTextBox.Text);
 
         if (this.SaveFileDialog.ShowDialog() == DialogResult.OK)
         {
@@ -121,12 +138,15 @@ public partial class MainForm : Form
         }
         if (!File.Exists(this._savingFilePath) && this._savingFilePath != "")
         {
-            FileStream fileStream = File.Open(this._savingFilePath, FileMode.Create, FileAccess.ReadWrite);
-            fileStream.Close();
+            using FileStream fileStream = File.Open(this._savingFilePath,
+                                                    FileMode.Create,
+                                                    FileAccess.ReadWrite);
         }
         try
         {
-            File.WriteAllText(this._savingFilePath, this.RichTextBox.Text, this._encodeSave);
+            File.WriteAllText(this._savingFilePath,
+                              this.RichTextBox.Text,
+                              this._encodeSave);
         }
         catch (Exception ex)
         {
@@ -135,24 +155,26 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// ラジオボタンに対応するエンコード（に対応するインデックス）を選択するメソッド
+    /// ラジオボタンに対応するエンコードを選択するメソッド
     /// </summary>
     /// <remarks>
-    /// ラジオボタンの選択で読み込み/保存のエンコードを変えられるようにしたい
-    ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
-    ///各ボタンのエンコードに対応するint型の値を返すようにした
+    /// ラジオボタンを選択すると、対応するエンコードの列挙値をエンコード名として設定される
     ///</remarks>
-    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf8;
+    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeName = EncodeName.Utf8;
 
-    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf16LE;
+    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeName = EncodeName.Utf16LE;
 
-    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf16BE;
+    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeName = EncodeName.Utf16BE;
 
-    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = EncodeName.Utf32;
+    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeName = EncodeName.Utf32;
 
     /// <summary>
-    /// テキスト色変更のメソッド
+    /// テキスト色変更のメソッド(文字色変更ボタンのイベントハンドラ)
     /// </summary>
+    /// <remarks>
+    /// カラーダイアログで選択された色へテキストの文字色を変更する
+    /// タグ要素色も同時に変更されるため、文字色変更後にタグ色を元に戻す
+    /// </remarks>
     private void ChangeTextColor_OnClick(object sender, EventArgs e)
     {
         if (this.ColorDialogForText.ShowDialog() == DialogResult.OK)
@@ -166,16 +188,16 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// タグ要素の色を変更するメソッド
+    /// タグ要素の色を変更するメソッド（タグ色変更ボタンのイベントハンドラ）
     /// </summary>
     /// <remarks>
-    ///  タグ要素の色を変更したい
-    ///ただプロパティを変更するだけでは色は変わらないため
-    ///要素の色を決定した後タグ色を変更させるメソッドを作用させた
+    ///プロパティの変更のみではxmlタグが指定された色へ変わらないため
+    ///プロパティ変更後、タグ色を変更させるメソッドを作用させた
     ///</remarks>
     private void ChangeTagColor_OnClick(object sender, EventArgs e)
     {
-        if (this.IsXML(this._loadedFilePath) && (this.ColorDialogForTag.ShowDialog() == DialogResult.OK))
+        if (this.IsXML(this._loadedFilePath)
+            && (this.ColorDialogForTag.ShowDialog() == DialogResult.OK))
         {
             this._tagColor = this.ColorDialogForTag.Color;
             this.ColoringTag();
@@ -183,11 +205,11 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// テキスト入力時にタグの形式になっていればタグ要素を着色するメソッド
+    /// xmlファイル読み込み時のテキスト入力で、入力がタグの形式になっていればタグ要素を着色するメソッド
     /// </summary>
     /// <remarks>
-    /// テキスト入力時にタグの形式になっていれば自動で色がついてほしい
-    ///タグ要素の色でテキストが入力されてはならない、かつ入力場所も変化してはならないため
+    ///xmlファイル読み込み時に入力がタグの形式となっていれば自動的にタグ要素の色に変更する
+    ///色変更で入力位置が変更されたり、無関係の場所がタグ要素の色にならないよう
     ///通常のタグ要素色変更メソッドに加えて入力位置を元に戻し、タグの選択を解除する記述を追加した
     ///</remarks>
     private void TextChanging(object sender, EventArgs e)
