@@ -24,17 +24,17 @@ namespace TextEditor
         private Encoding _encodeSave = Encodes.GetEncode((int)Encode.Utf8);
         private Color _tagColor = Color.Blue;
 
-        /// <summary>
-        /// XMLファイルであるかを判定するメソッド
-        /// </summary>
-        /// <param name="path">判定対象のファイルパス</param>
-        /// <returns>XMLファイルであればtrueを返す</returns>
-        /// <remarks>
-        ///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
-        ///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
-        ///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
-        /// </remarks>
-        private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
+    /// <summary>
+    /// XMLファイルであるかを判定するメソッド
+    /// </summary>
+    /// <param name="path">判定対象のファイルパス</param>
+    /// <returns>XMLファイルであればtrueを返す</returns>
+    /// <remarks>
+    ///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
+    ///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
+    ///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
+    /// </remarks>
+    private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
         /// <summary>
         /// (XML)タグ要素の色を変更
@@ -202,5 +202,22 @@ namespace TextEditor
             }
         }
 
+    /// <summary>
+    /// WriteAllTextの自作版メソッド
+    /// </summary>
+    /// <param name="path">保存ファイルパス</param>
+    /// <param name="savetext">保存するテキスト</param>
+    /// <param name="encode">エンコード</param>
+    /// <remarks>
+    /// StreamWriterをnewすることで(ファイル作成・)FileStreamをOpenして
+    /// 引数として受けた保存テキストを、StreamWriter.Writeでファイルへ書き込み
+    /// </remarks>
+    private void MyWriteAllText(string path, string savetext, Encoding encode) 
+    {
+        using (var sw = new StreamWriter(path,false,encode)) 
+        {
+            sw.Write(savetext);
+        }
     }
+
 }
