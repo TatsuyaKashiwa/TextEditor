@@ -24,17 +24,17 @@ public partial class MainForm : Form
     private Encoding _encodeSave = Encodes.GetEncode((int)Encode.Utf8);
     private Color _tagColor = Color.Blue;
 
-/// <summary>
-/// XMLファイルであるかを判定するメソッド
-/// </summary>
-/// <param name="path">判定対象のファイルパス</param>
-/// <returns>XMLファイルであればtrueを返す</returns>
-/// <remarks>
-///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
-///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
-///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
-/// </remarks>
-private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
+    /// <summary>
+    /// XMLファイルであるかを判定するメソッド
+    /// </summary>
+    /// <param name="path">判定対象のファイルパス</param>
+    /// <returns>XMLファイルであればtrueを返す</returns>
+    /// <remarks>
+    ///xmlファイルのタグに色を付けるためにxmlファイルであるかを判定する必要がある
+    ///判定結果を boolとしたほうが、条件式にそのまま組み込めるので
+    ///引数のファイルパスが.xmlで終わるかの判定をIsMatchメソッドで実現した
+    /// </remarks>
+    private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
 
     /// <summary>
     /// (XML)タグ要素の色を変更
@@ -70,13 +70,13 @@ private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
     ///<exception cref="System.IO.FileNotFoundException">存在しないファイル名を入力した場合</exception>
-    private void Load_Click(object sender, EventArgs e)
+    private void Load_OnClick(object sender, EventArgs e)
     {
         if (this.OpenFileDialog.ShowDialog() == DialogResult.OK)
         {
             this._loadedFilePath = this.OpenFileDialog.FileName;
         }
-        
+
         this._encodeLoad = Encodes.GetEncode((int)this._encodeNum);
 
         try
@@ -109,7 +109,7 @@ private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
     ///Encodesクラスのメソッドでエンコードを変換し、ファイルへのデータ書き出しのみtry節で囲んだ
     ///</remarks>
     ///<exception cref="System.ArgumentException">ファイル未選択の場合</exception>
-    private void Save_Click(object sender, EventArgs e)
+    private void Save_OnClick(object sender, EventArgs e)
     {
 
         this._encodeSave = Encodes.GetEncode((int)this._encodeNum);
@@ -142,23 +142,23 @@ private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
     ///ラジオボタンの選択をエンコードを返すメソッドに渡す必要があるため
     ///各ボタンのエンコードに対応するint型の値を返すようにした
     ///</remarks>
-    private void Utf8_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf8;
+    private void Utf8_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf8;
 
-    private void Utf16le_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16LE;
+    private void Utf16le_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16LE;
 
-    private void Utf16be_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16BE;
+    private void Utf16be_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf16BE;
 
-    private void Utf32_CheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf32;
+    private void Utf32_OnCheckedChanged(object sender, EventArgs e) => this._encodeNum = Encode.Utf32;
 
     /// <summary>
     /// テキスト色変更のメソッド
     /// </summary>
-    private void ChangeTextColor_Click(object sender, EventArgs e)
+    private void ChangeTextColor_OnClick(object sender, EventArgs e)
     {
         if (this.ColorDialogForText.ShowDialog() == DialogResult.OK)
         {
             this.RichTextBox.ForeColor = this.ColorDialogForText.Color;
-            if (this.IsXML(this._loadedFilePath)) 
+            if (this.IsXML(this._loadedFilePath))
             {
                 this.ColoringTag();
             }
@@ -173,7 +173,7 @@ private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
     ///ただプロパティを変更するだけでは色は変わらないため
     ///要素の色を決定した後タグ色を変更させるメソッドを作用させた
     ///</remarks>
-    private void ChangeTagColor_Click(object sender, EventArgs e)
+    private void ChangeTagColor_OnClick(object sender, EventArgs e)
     {
         if (this.IsXML(this._loadedFilePath) && (this.ColorDialogForTag.ShowDialog() == DialogResult.OK))
         {
@@ -201,23 +201,4 @@ private bool IsXML(string path) => Regex.IsMatch(path, ".xml$");
             this.RichTextBox.SelectionLength = 0;
         }
     }
-
-/// <summary>
-/// WriteAllTextの自作版メソッド
-/// </summary>
-/// <param name="path">保存ファイルパス</param>
-/// <param name="savetext">保存するテキスト</param>
-/// <param name="encode">エンコード</param>
-/// <remarks>
-/// StreamWriterをnewすることで(ファイル作成・)FileStreamをOpenして
-/// 引数として受けた保存テキストを、StreamWriter.Writeでファイルへ書き込み
-/// </remarks>
-private void MyWriteAllText(string path, string savetext, Encoding encode) 
-{
-    using (var sw = new StreamWriter(path,false,encode)) 
-    {
-        sw.Write(savetext);
-    }
-}
-
 }
