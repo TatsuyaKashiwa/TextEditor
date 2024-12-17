@@ -9,10 +9,6 @@ namespace TextEditor;
 /// <summary>
 /// エラーメッセージ表示のためのクラス
 /// </summary>
-/// <remarks>
-/// Form1クラスが乱雑になるのを防ぐべく
-///例外に対する処理を分離して記述するためのクラス
-///</remarks>
 internal static class ErrorMessageShower
 {
 
@@ -21,9 +17,7 @@ internal static class ErrorMessageShower
     /// </summary>
     /// <param name="e">catchされた例外</param>
     /// <remarks>
-    /// 例外に対する扱いはその種類に関わらずメッセージボックスを出すことで統一
-    ///対応すべき例外は2種類から増える可能性がある
-    ///各例外に対応するメッセージを、例外の数が増えた時の拡張性が高いswitch文による記述で分岐させて表示
+    /// 例外が発生しうるファイル入出力時の例外に対するエラーメッセージを表示
     ///</remarks>
     internal static void ShowErrorMessage(Exception e) 
     {
